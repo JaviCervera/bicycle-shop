@@ -28,3 +28,4 @@ class PartOption:
   part_id: int
   description: str
   price: float
+  in_stock: bool

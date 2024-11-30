@@ -5,19 +5,19 @@ from catalog.domain import PartOption
 
 class PartOptionRepository:
   _options = [
-    PartOption(1, 1, 'Full-suspension', 130),
-    PartOption(2, 1, 'Diamond', 100),
-    PartOption(3, 1, 'Step-through', 90),
-    PartOption(4, 2, 'Matte', 50),
-    PartOption(5, 2, 'Shiny', 30),
-    PartOption(6, 3, 'Road wheels', 80),
-    PartOption(7, 3, 'Mountain wheels', 90),
-    PartOption(8, 3, 'Fat bike wheels', 100),
-    PartOption(9, 14, 'Red', 20),
-    PartOption(10, 4, 'Black', 25),
-    PartOption(11, 4, 'Blue', 20),
-    PartOption(12, 5, 'Single-speed chain', 43),
-    PartOption(13, 5, '8-speed chain', 90),
+    PartOption(1, 1, 'Full-suspension', 130, True),
+    PartOption(2, 1, 'Diamond', 100, True),
+    PartOption(3, 1, 'Step-through', 90, True),
+    PartOption(4, 2, 'Matte', 50, True),
+    PartOption(5, 2, 'Shiny', 30, True),
+    PartOption(6, 3, 'Road wheels', 80, True),
+    PartOption(7, 3, 'Mountain wheels', 90, True),
+    PartOption(8, 3, 'Fat bike wheels', 100, True),
+    PartOption(9, 14, 'Red', 20, True),
+    PartOption(10, 4, 'Black', 25, True),
+    PartOption(11, 4, 'Blue', 20, True),
+    PartOption(12, 5, 'Single-speed chain', 43, True),
+    PartOption(13, 5, '8-speed chain', 90, True),
   ]
 
   def list(self, part_id: int = None) -> Sequence[int]:

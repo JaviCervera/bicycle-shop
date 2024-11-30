@@ -51,6 +51,7 @@ part_option:
 - part_id
 - description
 - price
+- in_stock
 
 # 2, 7
 # 3, 7
