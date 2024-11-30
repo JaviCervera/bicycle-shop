@@ -78,7 +78,7 @@ class TestDataModel(TestCase):
         PartOption(6, 3, 'Road wheels', 80, True),
         PartOption(7, 3, 'Mountain wheels', 90, True),
         PartOption(8, 3, 'Fat bike wheels', 100, True),
-        PartOption(9, 14, 'Red', 20, True),
+        PartOption(9, 4, 'Red', 20, True),
         PartOption(10, 4, 'Black', 25, True),
         PartOption(11, 4, 'Blue', 20, True),
         PartOption(12, 5, 'Single-speed chain', 43, True),
