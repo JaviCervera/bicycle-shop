@@ -104,13 +104,13 @@ class TestDataModel(TestCase):
     self.assertEqual([], self.option_repo.list_incompatibilies(1))
 
   def test_get_price_modifiers(self):
-    dependent_options = self.option_repo.list_dependents(2)
-    self.assertEqual([4], dependent_options)
+    depending_options = self.option_repo.list_depending_options(2)
+    self.assertEqual([2], depending_options)
 
-    price_coefs = [self.option_repo.get_price_coef(2, id)
-                   for id in dependent_options]
+    price_coefs = [self.option_repo.get_depending_option_price_coef(2, id)
+                   for id in depending_options]
     self.assertEqual([0.7], price_coefs)
   
   def test_get_price_modifiers_for_invalid_option(self):
-    self.assertEqual([], self.option_repo.list_dependents(1))
-    self.assertEqual(1, self.option_repo.get_price_coef(1, 2))
+    self.assertEqual([], self.option_repo.list_depending_options(1))
+    self.assertEqual(1, self.option_repo.get_depending_option_price_coef(1, 2))

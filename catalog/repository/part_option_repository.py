@@ -40,14 +40,15 @@ class PartOptionRepository:
     }
     return incompatibilities.get(id, [])
 
-  def list_dependents(self, id: int) -> Sequence[int]:
-    dependents = {
-      2: [4]
+  def list_depending_options(self, part_id: int) -> Sequence[int]:
+    depending_opts = {
+      2: [2]
     }
-    return dependents.get(id, [])
+    return depending_opts.get(part_id, [])
 
-  def get_price_coef(self, id: int, dependent_id: int) -> float:
+  def get_depending_option_price_coef(
+      self, part_id: int, depending_option_id: int) -> float:
     coefs = {
-      (2, 4): 0.7
+      (2, 2): 0.7
     }
-    return coefs.get((id, dependent_id), 1)
+    return coefs.get((part_id, depending_option_id), 1)
