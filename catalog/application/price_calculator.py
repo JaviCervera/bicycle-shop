@@ -1,8 +1,8 @@
 from math import prod
 from typing import Iterable
 
-from .models import PartOption
-from catalog.repository import PartOptionRepository
+from catalog.domain import PartOption
+from .part_option_repository import PartOptionRepository
 
 
 class PriceCalculator:

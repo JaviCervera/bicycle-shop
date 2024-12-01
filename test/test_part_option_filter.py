@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from catalog.domain import PartOption, PartOptionFilter, ProductPart
-from catalog.repository import PartOptionRepository, ProductPartRepository
+from catalog.application import PartOptionFilter, PartOptionRepository, \
+  ProductPartRepository
+from catalog.domain import PartOption, ProductPart
 
 class TestPartOptionFilter(TestCase):
   def setUp(self):

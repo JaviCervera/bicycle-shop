@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from catalog.domain import PartOption, PriceCalculator
-from catalog.repository import PartOptionRepository
+from catalog.application import PartOptionRepository, PriceCalculator
+from catalog.domain import PartOption
 
 
 class TestPriceCalculator(TestCase):
