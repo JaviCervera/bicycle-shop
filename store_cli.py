@@ -16,7 +16,6 @@ def select_product() -> Product:
   return select_elem(get_products(), 'product')
 
 
-
 def select_parts(product: Product) -> Iterable[PartOption]:
   selected = []
   for part in get_parts(product):
@@ -65,5 +64,3 @@ def display_order_summary(
 
 if __name__ == '__main__':
   main()
-
-# TODO Why "8-speed chain" is not available in selection 1, 2, 1, 2, 1?

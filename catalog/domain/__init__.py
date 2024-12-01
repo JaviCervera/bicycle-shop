@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from itertools import chain
 from math import prod
-from typing import Iterable, Sequence
+from typing import Iterable
 
 
 @dataclass(frozen=True)
@@ -33,7 +33,7 @@ class PartOptionFilter:
   def compatible(
       self,
       product_part: ProductPart,
-      selected_options: Iterable[PartOption]) -> Sequence[PartOption]:
+      selected_options: Iterable[PartOption]) -> Iterable[PartOption]:
     return [self._repo.get(opt)
             for opt in self._repo.list(product_part.id)
             if opt not in self._all_incompatibilities(selected_options)]
@@ -45,7 +45,7 @@ class PartOptionFilter:
        for opt in selected_options])
 
   def in_stock(
-      self, options: Iterable[PartOption]) -> Sequence[PartOption]:
+      self, options: Iterable[PartOption]) -> Iterable[PartOption]:
     return [opt for opt in options if opt.in_stock]
 
 

@@ -1,9 +1,9 @@
-from typing import Optional, Sequence
+from typing import Iterable, Optional
 
 from catalog.domain import ProductPart
 
 class ProductPartRepository:
-  def list(self, product_id: int = None) -> Sequence[int]:
+  def list(self, product_id: int = None) -> Iterable[int]:
     if product_id in (None, 1):
       return [1, 2, 3, 4, 5]
     else:

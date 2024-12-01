@@ -59,5 +59,5 @@ class TestPartOptionFilter(TestCase):
   
   @staticmethod
   def find_elem(repo, description: str):
-    return [repo.get(elem) for elem in repo.list()
-            if repo.get(elem).description == description][0]
+    return next([repo.get(elem) for elem in repo.list()
+            if repo.get(elem).description == description])

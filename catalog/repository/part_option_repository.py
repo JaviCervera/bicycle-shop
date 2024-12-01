@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Iterable, Optional
 
 from catalog.domain import PartOption
 
@@ -20,7 +20,7 @@ class PartOptionRepository:
     PartOption(13, 5, '8-speed chain', 90, False),
   ]
 
-  def list(self, part_id: int = None) -> Sequence[int]:
+  def list(self, part_id: int = None) -> Iterable[int]:
     if part_id is None:
       return [opt.id for opt in self._options]
     else:
@@ -32,7 +32,7 @@ class PartOptionRepository:
     else:
       return None
 
-  def list_incompatibilies(self, id: int) -> Sequence[int]:
+  def list_incompatibilies(self, id: int) -> Iterable[int]:
     incompatibilities = {
       2: [7],
       3: [7],
@@ -42,7 +42,7 @@ class PartOptionRepository:
     }
     return incompatibilities.get(id, [])
 
-  def list_depending_options(self, part_id: int) -> Sequence[int]:
+  def list_depending_options(self, part_id: int) -> Iterable[int]:
     depending_opts = {
       2: [2]
     }

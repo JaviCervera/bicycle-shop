@@ -1,10 +1,10 @@
-from typing import Optional, Sequence
+from typing import Iterable, Optional
 
 from catalog.domain import Product
 
 
 class ProductRepository:
-  def list(self) -> Sequence[int]:
+  def list(self) -> Iterable[int]:
     return [1]
 
   def get(self, id: int) -> Optional[Product]:
