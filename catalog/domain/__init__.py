@@ -11,14 +11,6 @@ class Product:
 
 
 @dataclass(frozen=True)
-class ProductModel:
-  id: int
-  product_id: int
-  description: str
-  image_url: str
-
-
-@dataclass(frozen=True)
 class ProductPart:
   id: int
   product_id: int

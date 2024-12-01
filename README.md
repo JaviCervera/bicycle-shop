@@ -59,13 +59,6 @@ product:
 - id
 - description
 
-# 1, 1, BMX, http://cdn...
-product_model:
-- id
-- product_id
-- description
-- image url
-
 # 1, 1, Frame type
 # 2, 1, Frame finish
 # 3, 1, Wheels
@@ -128,7 +121,7 @@ return an arbitrary number of `Product`s.
 `PartOptionFilter.compatible` returns the options available for a part based on other options selected.
 
 4. You can't select options which are out of stock.
-`PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option is in stock if its value is > 0, and will decrease with each order purchased that contains the option.
+`PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option would be in stock if its value is > 0, and would decrease with each order purchased that contains the option.
 
 `PartOptionFilter.in_stock` returns which of the given options are in stock.
 
@@ -139,5 +132,3 @@ return an arbitrary number of `Product`s.
 6. The price of the options in some parts might depend on which options were selected for other parts.
 
 `PriceCalculator` takes into account if a selected option modifies other options in the list.
-
-TODO: Explain why `ProductModelRepository` was added.

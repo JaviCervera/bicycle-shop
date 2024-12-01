@@ -1,15 +1,12 @@
 from unittest import TestCase
 
-from catalog.domain import PartOption, Product, ProductModel, ProductPart
-from catalog.repository import PartOptionRepository, ProductModelRepository, \
-  ProductPartRepository, ProductRepository
-
-BMX_IMAGE = 'https://i5.walmartimages.com/asr/974013a6-f64c-4d26-aaa5-ac4077294a58_1.a6d127a1ba320fac589f825afa74a0b5.jpeg'
+from catalog.domain import PartOption, Product, ProductPart
+from catalog.repository import PartOptionRepository, ProductPartRepository, \
+  ProductRepository
 
 class TestDataModel(TestCase):
   def setUp(self):
     self.product_repo = ProductRepository()
-    self.model_repo = ProductModelRepository()
     self.part_repo = ProductPartRepository()
     self.option_repo = PartOptionRepository()
 
@@ -22,22 +19,6 @@ class TestDataModel(TestCase):
 
   def test_get_invalid_product(self):
     self.assertIsNone(self.product_repo.get(2))
-
-  def test_get_models(self):
-    model_ids = self.model_repo.list()
-    self.assertEqual([1], model_ids)
-
-    models = [self.model_repo.get(id) for id in model_ids]
-    self.assertEqual([ProductModel(1, 1, 'BMX', BMX_IMAGE)], models)
-  
-  def test_get_models_for_product(self):
-    self.assertEqual([1], self.model_repo.list(1))
-
-  def test_get_models_for_invalid_product(self):
-    self.assertEqual([], self.model_repo.list(2))
-
-  def test_get_invalid_model(self):
-    self.assertIsNone(self.model_repo.get(2))
 
   def test_get_parts(self):
     part_ids = self.part_repo.list()
