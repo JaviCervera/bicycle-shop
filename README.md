@@ -76,19 +76,19 @@ product_part:
 - product_id
 - description
 
-# 1, 1, Full-suspension, 130
-# 2, 1, Diamond, 100
-# 3, 1, Step-through, 90
-# 4, 2, Matte, 50
-# 5, 2, Shiny, 30
-# 6, 3, Road wheels, 80
-# 7, 3, Mountain wheels, 90
-# 8, 3, Fat bike wheels, 100
-# 9, 4, Red, 20
-# 10, 4, Black, 25
-# 11, 4, Blue, 20
-# 12, 5, Single-speed chain, 43
-# 13, 5, 8-speed chain, 90
+# 1, 1, Full-suspension, 130, True
+# 2, 1, Diamond, 100, True
+# 3, 1, Step-through, 90, True
+# 4, 2, Matte, 50, True
+# 5, 2, Shiny, 30, True
+# 6, 3, Road wheels, 80, True
+# 7, 3, Mountain wheels, 90, True
+# 8, 3, Fat bike wheels, 100, True
+# 9, 4, Red, 20, True
+# 10, 4, Black, 25, True
+# 11, 4, Blue, 20, True
+# 12, 5, Single-speed chain, 43, True
+# 13, 5, 8-speed chain, 90, False
 part_option:
 - id
 - part_id
@@ -112,3 +112,32 @@ option_price_modifier:
 - depending_option_id
 - coef
 ```
+
+## Requirements conformance
+
+1. The store must be able to sell different kinds of products.
+This requirement is satisfied by providing a `ProductRepository` that can
+return an arbitrary number of `Product`s.
+
+2. Each product is divided in different parts that the client can customize by choosing from several options for each part.
+`ProductPartRepository` can return the list of parts available for a specific `Product`. `PartOptionRepository` can returns the options available for a given `ProductPart`.
+
+3. The option selected for a part might be incompatible with other options of any parts.
+`PartOptionRepository` can provide a list of `PartOption`s which are incompatible with another one.
+
+`PartOptionFilter.compatible` returns the options available for a part based on other options selected.
+
+4. You can't select options which are out of stock.
+`PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option is in stock if its value is > 0, and will decrease with each order purchased that contains the option.
+
+`PartOptionFilter.in_stock` returns which of the given options are in stock.
+
+5. The price of a product is calculated by adding up the individual prices of each selected part.
+
+`PriceCalculator` computes the total price from a list of parts.
+
+6. The price of the options in some parts might depend on which options were selected for other parts.
+
+`PriceCalculator` takes into account if a selected option modifies other options in the list.
+
+TODO: Explain why `ProductModelRepository` was added.

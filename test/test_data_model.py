@@ -82,7 +82,7 @@ class TestDataModel(TestCase):
         PartOption(10, 4, 'Black', 25, True),
         PartOption(11, 4, 'Blue', 20, True),
         PartOption(12, 5, 'Single-speed chain', 43, True),
-        PartOption(13, 5, '8-speed chain', 90, True),
+        PartOption(13, 5, '8-speed chain', 90, False),
       ],
       options)
 

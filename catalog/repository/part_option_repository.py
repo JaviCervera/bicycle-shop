@@ -17,7 +17,7 @@ class PartOptionRepository:
     PartOption(10, 4, 'Black', 25, True),
     PartOption(11, 4, 'Blue', 20, True),
     PartOption(12, 5, 'Single-speed chain', 43, True),
-    PartOption(13, 5, '8-speed chain', 90, True),
+    PartOption(13, 5, '8-speed chain', 90, False),
   ]
 
   def list(self, part_id: int = None) -> Sequence[int]:
@@ -36,7 +36,9 @@ class PartOptionRepository:
     incompatibilities = {
       2: [7],
       3: [7],
+      7: [2, 3],
       8: [9],
+      9: [8],
     }
     return incompatibilities.get(id, [])
 
