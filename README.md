@@ -54,8 +54,8 @@ These kinds of variations can always happen, and they might depend on any of the
 ## Data model
 
 ```
-# 1, Bycicles
-product:
+# 1, Bicycles
+products:
 - id
 - description
 
@@ -64,7 +64,7 @@ product:
 # 3, 1, Wheels
 # 4, 1, Rim color
 # 5, 1, Chain
-product_part:
+product_parts:
 - id
 - product_id
 - description
@@ -82,25 +82,27 @@ product_part:
 # 11, 4, Blue, 20, True
 # 12, 5, Single-speed chain, 43, True
 # 13, 5, 8-speed chain, 90, False
-part_option:
+part_options:
 - id
 - part_id
 - description
 - price
 - in_stock
 
-# 2, 7
-# 3, 7
-# 8, 9
-option_incompatibility:
+# 1, 2, 7
+# 2, 3, 7
+# 3, 8, 9
+option_incompatibilities:
+- id
 - option_id
 - incompatible_option_id
 
-# 2, 4, 0.7
+# 1, 2, 2, 0.7
 # Any items in part_id will get their price modified by coef if
 # depending_option_id is selected (which itself might belong to a different
 # part_id)
-option_price_modifier:
+option_price_modifiers:
+- id
 - part_id
 - depending_option_id
 - coef

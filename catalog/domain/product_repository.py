@@ -11,3 +11,7 @@ class ProductRepository(ABC):
   @abstractmethod
   def get(self, id: int) -> Optional[Product]:
     pass
+
+  @abstractmethod
+  def create(self, description: str) -> Product:
+    pass
