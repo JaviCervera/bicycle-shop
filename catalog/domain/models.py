@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from .validations import validate_id, validate_type
+
 @dataclass(frozen=True)
 class Product:
   id: int
@@ -7,7 +9,7 @@ class Product:
 
   def __post_init__(self):
     validate_id(self.id, 'Product.id')
-    validate_str(self.description, 'Product.description')
+    validate_type(self.description, str, 'Product.description')
 
 
 @dataclass(frozen=True)
@@ -18,8 +20,8 @@ class ProductPart:
 
   def __post_init__(self):
     validate_id(self.id, 'ProductPart.id')
-    validate_int(self.product_id, 'ProductPart.product_id')
-    validate_str(self.description, 'ProductPart.description')
+    validate_id(self.product_id, 'ProductPart.product_id')
+    validate_type(self.description, str, 'ProductPart.description')
 
 
 @dataclass(frozen=True)
@@ -33,33 +35,6 @@ class PartOption:
   def __post_init__(self):
     validate_id(self.id, 'PartOption.id')
     validate_id(self.part_id, 'PartOption.part_id')
-    validate_str(self.description, 'PartOption.description')
-    validate_float(self.price, 'PartOption.price')
-    validate_bool(self.in_stock, 'PartOption.in_stock')
-
-
-def validate_id(id, field: str) -> None:
-  if not isinstance(id, int) or not id > 0:
-    raise ValueError(f'{field} must be a positive integer, '
-                     f'got {type(id).__name__}')
-
-
-def validate_bool(v, field: str) -> None:
-  if not isinstance(v, bool):
-    raise ValueError(f'{field} must be a boolean, got {type(v).__name__}')
-
-
-def validate_int(v, field: str) -> None:
-  if not isinstance(v, int):
-    raise ValueError(f'{field} must be an integer, got {type(v).__name__}')
-  
-
-def validate_float(v, field: str) -> None:
-  if not isinstance(v, (int, float)):
-    raise ValueError(f'{field} must be a float, got {type(v).__name__}')
-
-
-def validate_str(v, field: str) -> None:
-  if not isinstance(v, str) or not v:
-    raise ValueError(f'{field} must be a non empty string, '
-                     f'got {type(v).__name__}')
+    validate_type(self.description, str, 'PartOption.description')
+    validate_type(self.price, (int, float), 'PartOption.price')
+    validate_type(self.in_stock, bool, 'PartOption.in_stock')

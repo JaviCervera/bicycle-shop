@@ -1,14 +1,19 @@
 from unittest import TestCase
 
-from catalog.domain import PartOption, PriceCalculator
+from catalog.application import CalculatePriceCommand
+from catalog.domain import PartOption
 from .mock_part_option_repository import MockPartOptionRepository
 
 
-class TestPriceCalculator(TestCase):
+class TestCalculatePriceCommand(TestCase):
+  def setUp(self):
+    self.repo = MockPartOptionRepository()
+    self.calculate_price = CalculatePriceCommand(self.repo)
+
   def test_prices_witout_modifiers(self):
     self.assertEqual(
       303,
-      PriceCalculator(MockPartOptionRepository())([
+      self.calculate_price([
         self.find_option('Full-suspension'),
         self.find_option('Shiny'),
         self.find_option('Road wheels'),
@@ -21,7 +26,7 @@ class TestPriceCalculator(TestCase):
     # Without the modifier, it would be 293
     self.assertEqual(
       278,
-      PriceCalculator(MockPartOptionRepository())([
+      self.calculate_price([
         self.find_option('Diamond'),
         self.find_option('Matte'),
         self.find_option('Road wheels'),
@@ -30,8 +35,6 @@ class TestPriceCalculator(TestCase):
       ])
     )
 
-  @staticmethod
-  def find_option(description: str) -> PartOption:
-    repo = MockPartOptionRepository()
-    return [repo.get(elem) for elem in repo.list()
-            if repo.get(elem).description == description][0]
+  def find_option(self, description: str) -> PartOption:
+    return [self.repo.get(elem) for elem in self.repo.list()
+            if self.repo.get(elem).description == description][0]
