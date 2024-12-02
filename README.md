@@ -1,5 +1,7 @@
 # bicycle-shop
 
+[![test](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml/badge.svg)](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml)
+
 To run the tests, do:
 
 ```shell

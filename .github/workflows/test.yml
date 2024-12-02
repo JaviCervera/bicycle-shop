@@ -1,0 +1,14 @@
+name: test
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Install dependencies 📥
+        run: pip install -r requirements-dev.txt
+      - name: Lint 🔍
+        run: python -m ruff check .
+      - name: Test 🧪
+        run: pytest --cov
