@@ -1,8 +1,8 @@
 from itertools import chain
 from typing import Iterable
 
-from catalog.domain import PartOption, ProductPart
-from .part_option_repository import PartOptionRepository
+from .models import PartOption, ProductPart
+from catalog.repository import PartOptionRepository
 
 class PartOptionFilter:
   def __init__(self, opt_repository: PartOptionRepository):

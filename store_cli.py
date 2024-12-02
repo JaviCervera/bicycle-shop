@@ -1,8 +1,9 @@
 from typing import Iterable
 
-from catalog.application import PartOptionFilter, PartOptionRepository, \
-  PriceCalculator, ProductPartRepository, ProductRepository
-from catalog.domain import PartOption, Product, ProductPart
+from catalog.domain import PartOption, PartOptionFilter, PriceCalculator, \
+  Product, ProductPart
+from catalog.repository import PartOptionRepository, ProductPartRepository, \
+  ProductRepository
 
 
 def main() -> None:
@@ -18,8 +19,7 @@ def select_product() -> Product:
 def select_parts(product: Product) -> Iterable[PartOption]:
   selected = []
   for part in get_parts(product):
-    selected.append(
-      select_elem(filter_options(part, selected), part.description.lower()))
+    selected.append(select_elem(filter_options(part, selected), part.description.lower()))
   return selected
 
 
@@ -46,9 +46,7 @@ def get_parts(product: Product) -> Iterable[ProductPart]:
   return [repo.get(id) for id in repo.list(product.id)]
 
 
-def filter_options(
-    part: ProductPart,
-    selection: Iterable[PartOption]) -> Iterable[PartOption]:
+def filter_options(part: ProductPart, selection: Iterable[PartOption]) -> Iterable[PartOption]:
   filter = PartOptionFilter(PartOptionRepository())
   return filter.in_stock(filter.compatible(part, selection))
 

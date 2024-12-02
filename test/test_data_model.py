@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from catalog.application import PartOptionRepository, ProductPartRepository, \
-  ProductRepository
 from catalog.domain import PartOption, Product, ProductPart
+from catalog.repository import PartOptionRepository, ProductPartRepository, \
+  ProductRepository
 
 class TestDataModel(TestCase):
   def setUp(self):
