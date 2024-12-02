@@ -30,7 +30,7 @@ def main() -> None:
   calculate_price = CalculatePriceCommand(option_repo)
   product = select_product(get_products)
   options = select_parts(product, get_parts, get_options)
-  display_order_summary(product, get_parts(product), options, calculate_price)
+  display_order_summary(product, get_parts(product.id), options, calculate_price)
 
 
 def select_product(get_products: GetProductsCommand) -> Product:
@@ -42,9 +42,9 @@ def select_parts(
     get_parts: GetProductPartsCommand,
     get_options: GetPartOptionsCommand) -> Iterable[PartOption]:
   selected = []
-  for part in get_parts(product):
+  for part in get_parts(product.id):
     selected.append(select_elem(
-      get_options(part, selected), part.description.lower()))
+      get_options(part.id, selected), part.description.lower()))
   return selected
 
 

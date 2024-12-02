@@ -1,7 +1,7 @@
 from itertools import chain
 from typing import Iterable
 
-from catalog.domain import PartOption, PartOptionRepository, ProductPart
+from catalog.domain import PartOption, PartOptionRepository, ProductPartId
 from catalog.domain.validations import validate_iterable, validate_type
 
 class GetPartOptionsCommand:
@@ -11,18 +11,18 @@ class GetPartOptionsCommand:
 
   def __call__(
       self,
-      part: ProductPart,
+      part_id: ProductPartId,
       selected: Iterable[PartOption]) -> Iterable[PartOption]:
-    validate_type(part, ProductPart, 'part')
+    validate_type(part_id, ProductPartId, 'part_id')
     validate_iterable(selected, 'selected')
-    return self._in_stock(self._compatible(part, selected))
+    return self._in_stock(self._compatible(part_id, selected))
 
   def _compatible(
       self,
-      product_part: ProductPart,
+      part_id: ProductPartId,
       selected_options: Iterable[PartOption]) -> Iterable[PartOption]:
     return [self._repo.get(opt)
-            for opt in self._repo.list(product_part.id)
+            for opt in self._repo.list(part_id)
             if opt not in self._all_incompatibilities(selected_options)]
   
   def _all_incompatibilities(

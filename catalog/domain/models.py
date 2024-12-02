@@ -2,9 +2,13 @@ from dataclasses import dataclass
 
 from .validations import validate_id, validate_type
 
+ProductId = int
+ProductPartId = int
+PartOptionId = int
+
 @dataclass(frozen=True)
 class Product:
-  id: int
+  id: ProductId
   description: str
 
   def __post_init__(self):
@@ -14,8 +18,8 @@ class Product:
 
 @dataclass(frozen=True)
 class ProductPart:
-  id: int
-  product_id: int
+  id: ProductPartId
+  product_id: ProductId
   description: str
 
   def __post_init__(self):
@@ -26,8 +30,8 @@ class ProductPart:
 
 @dataclass(frozen=True)
 class PartOption:
-  id: int
-  part_id: int
+  id: PartOptionId
+  part_id: ProductPartId
   description: str
   price: float
   in_stock: bool
