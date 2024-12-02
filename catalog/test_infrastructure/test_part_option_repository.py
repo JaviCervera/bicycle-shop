@@ -1,9 +1,9 @@
 from typing import Iterable, Optional
 
-from catalog.domain import PartOption
+from catalog.domain import PartOption, PartOptionRepository
 
 
-class PartOptionRepository:
+class TestPartOptionRepository(PartOptionRepository):
   _options = [
     PartOption(1, 1, 'Full-suspension', 130, True),
     PartOption(2, 1, 'Diamond', 100, True),

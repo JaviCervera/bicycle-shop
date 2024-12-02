@@ -1,14 +1,14 @@
 from unittest import TestCase
 
 from catalog.domain import PartOption, Product, ProductPart
-from catalog.repository import PartOptionRepository, ProductPartRepository, \
-  ProductRepository
+from catalog.test_infrastructure import TestPartOptionRepository, \
+  TestProductPartRepository, TestProductRepository
 
 class TestDataModel(TestCase):
   def setUp(self):
-    self.product_repo = ProductRepository()
-    self.part_repo = ProductPartRepository()
-    self.option_repo = PartOptionRepository()
+    self.product_repo = TestProductRepository()
+    self.part_repo = TestProductPartRepository()
+    self.option_repo = TestPartOptionRepository()
 
   def test_get_products(self):
     product_ids = self.product_repo.list()

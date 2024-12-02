@@ -1,11 +1,12 @@
 from unittest import TestCase
 
 from catalog.domain import PartOption, PartOptionFilter, ProductPart
-from catalog.repository import PartOptionRepository, ProductPartRepository
+from catalog.test_infrastructure import TestPartOptionRepository, \
+  TestProductPartRepository
 
 class TestPartOptionFilter(TestCase):
   def setUp(self):
-    self.filter = PartOptionFilter(PartOptionRepository())
+    self.filter = PartOptionFilter(TestPartOptionRepository())
 
   def test_only_returns_options_compatible_with_selection(self):
     self.assertEqual(
@@ -52,10 +53,10 @@ class TestPartOptionFilter(TestCase):
     )
 
   def find_part(self, description: str) -> ProductPart:
-    return self.find_elem(ProductPartRepository(), description)
+    return self.find_elem(TestProductPartRepository(), description)
 
   def find_option(self, description: str) -> PartOption:
-    return self.find_elem(PartOptionRepository(), description)
+    return self.find_elem(TestPartOptionRepository(), description)
   
   @staticmethod
   def find_elem(repo, description: str):

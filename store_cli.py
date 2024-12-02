@@ -2,8 +2,8 @@ from typing import Iterable
 
 from catalog.domain import PartOption, PartOptionFilter, PriceCalculator, \
   Product, ProductPart
-from catalog.repository import PartOptionRepository, ProductPartRepository, \
-  ProductRepository
+from catalog.test_infrastructure import TestPartOptionRepository, \
+  TestProductPartRepository, TestProductRepository
 
 
 def main() -> None:
@@ -37,29 +37,29 @@ def select_elem(elems: Iterable, type: str):
     
 
 def get_products() -> Iterable[Product]:
-  repo = ProductRepository()
+  repo = TestProductRepository()
   return [repo.get(id) for id in repo.list()]
 
 
 def get_parts(product: Product) -> Iterable[ProductPart]:
-  repo = ProductPartRepository()
+  repo = TestProductPartRepository()
   return [repo.get(id) for id in repo.list(product.id)]
 
 
 def filter_options(part: ProductPart, selection: Iterable[PartOption]) -> Iterable[PartOption]:
-  filter = PartOptionFilter(PartOptionRepository())
+  filter = PartOptionFilter(TestPartOptionRepository())
   return filter.in_stock(filter.compatible(part, selection))
 
 
 def display_order_summary(
     product: Product, options: Iterable[PartOption]) -> None:
-  part_repo = ProductPartRepository()
+  part_repo = TestProductPartRepository()
   print()
   print(f'Your {product.description} order:')
   for opt in options:
     print(f'* {part_repo.get(opt.part_id).description}: {opt.description}')
   print()
-  print(f'Total price: {PriceCalculator(PartOptionRepository())(options)}')
+  print(f'Total price: {PriceCalculator(TestPartOptionRepository())(options)}')
 
 
 if __name__ == '__main__':
