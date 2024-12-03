@@ -4,8 +4,8 @@ from .sqlalchemy_product_part_repository import SqlAlchemyProductPartRepository
 from .sqlalchemy_product_repository import SqlAlchemyProductRepository
 
 __all__ = [
-  'create_models',
-  'SqlAlchemyPartOptionRepository',
-  'SqlAlchemyProductPartRepository',
-  'SqlAlchemyProductRepository',
+    'create_models',
+    'SqlAlchemyPartOptionRepository',
+    'SqlAlchemyProductPartRepository',
+    'SqlAlchemyProductRepository',
 ]

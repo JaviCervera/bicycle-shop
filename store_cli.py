@@ -1,45 +1,46 @@
-from typing import Iterable
+from typing import Callable, Iterable
 
-from catalog.application import GetPartOptionsCommand, GetProductPartsCommand, \
-  GetProductsCommand
-from catalog.domain import PartOption, Product, ProductPart
+from catalog.domain import PartOption, Product, ProductPart, ProductPartId
 
 from catalog_application import create_catalog_app
+
+GetPartOptionsFunc = \
+  Callable[[ProductPartId, Iterable[PartOption]], Iterable[PartOption]]
 
 catalog = create_catalog_app('http://localhost:8080')
 
 
 def main() -> None:
-  product = select_product(catalog.get_products)
-  options = select_parts(
-    product, catalog.get_product_parts, catalog.get_part_options)
+  product = select_product(catalog.get_products())
+  parts = catalog.get_product_parts(product.id)
+  options = select_options(parts, catalog.get_part_options)
   display_order_summary(
     product,
-    catalog.get_product_parts(product.id),
+    parts,
     options,
     catalog.calculate_price(options))
 
 
-def select_product(get_products: GetProductsCommand) -> Product:
-  return select_elem(get_products(), 'product')
+def select_product(products: Iterable[Product]) -> Product:
+  return select_elem(products, 'product')
 
 
-def select_parts(
-    product: Product,
-    get_parts: GetProductPartsCommand,
-    get_options: GetPartOptionsCommand) -> Iterable[PartOption]:
+def select_options(
+    parts: Iterable[ProductPart],
+    get_options: GetPartOptionsFunc) -> Iterable[PartOption]:
   selected = []
-  for part in get_parts(product.id):
-    selected.append(select_elem(
-      get_options(part.id, selected), part.description.lower()))
+  for part in parts:
+    selected.append(
+      select_elem(get_options(part.id, selected), part.description.lower()))
   return selected
 
 
-def select_elem(elems: Iterable, type: str):
+def select_elem(elems: Iterable, type_):
+  elems = list(elems)
   for i, elem in enumerate(elems):
     print(f'{i + 1}: {elem.description}')
   while True:
-    selected = input(f'Select {type}: ')
+    selected = input(f'Select {type_}: ')
     if not selected.isdigit() \
         or int(selected) not in range(1, len(elems) + 1):
       print(f'Please enter a number between 1 and {len(elems)}')

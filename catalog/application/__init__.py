@@ -4,8 +4,8 @@ from .get_product_parts import GetProductPartsCommand
 from .get_products import GetProductsCommand
 
 __all__ = [
-  'CalculatePriceCommand',
-  'GetPartOptionsCommand',
-  'GetProductPartsCommand',
-  'GetProductsCommand',
+    'CalculatePriceCommand',
+    'GetPartOptionsCommand',
+    'GetProductPartsCommand',
+    'GetProductsCommand',
 ]
