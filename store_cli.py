@@ -1,16 +1,61 @@
-from typing import Callable, Iterable
+import os
+from typing import Callable, Iterable, Union
 
-from catalog.domain import PartOption, Product, ProductPart, ProductPartId
+import requests
 
-from catalog_application import create_catalog_app
+from catalog.domain import PartOption, Product, ProductId, ProductPart, \
+    ProductPartId
+from catalog.sqlalchemy_infra import Application
 
 GetPartOptionsFunc = \
     Callable[[ProductPartId, Iterable[PartOption]], Iterable[PartOption]]
 
-catalog = create_catalog_app('http://localhost:8080')
+class ApplicationProxy:
+    def __init__(self, url: str) -> None:
+        self._base_url = url
+
+    def calculate_price(self, selected: Iterable[PartOption]) -> float:
+        result = requests.get(os.path.join(self._base_url, 'price'), params={
+            'selected_options': self._join_options(selected),
+        })
+        result.raise_for_status()
+        return float(result.json()['price'])
+
+    @staticmethod
+    def _join_options(options: Iterable[PartOption]) -> str:
+        return ','.join([str(opt.id) for opt in options])
+
+    def get_part_options(
+            self,
+            part_id: ProductPartId,
+            selected: Iterable[PartOption]) -> Iterable[PartOption]:
+        result = requests.get(os.path.join(self._base_url, 'part_options'), params={
+            'product_part': part_id,
+            'selected_options': self._join_options(selected),
+        })
+        result.raise_for_status()
+        return [PartOption(**opt) for opt in result.json()]
+
+    def get_product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
+        result = requests.get(os.path.join(self._base_url, 'product_parts'), params={
+            'product': product_id,
+        })
+        result.raise_for_status()
+        return [ProductPart(**part) for part in result.json()]
+
+    def get_products(self) -> Iterable[Product]:
+        result = requests.get(os.path.join(self._base_url, 'products'))
+        result.raise_for_status()
+        return [Product(**product) for product in result.json()]
+
+
+def create_app(url: str = None) -> Union[Application, ApplicationProxy]:
+    return ApplicationProxy(url) if url \
+        else Application('sqlite+pysqlite:///:memory:')
 
 
 def main() -> None:
+    catalog = create_app('http://localhost:8080')
     product = select_product(catalog.get_products())
     parts = catalog.get_product_parts(product.id)
     options = select_options(parts, catalog.get_part_options)
@@ -30,8 +75,9 @@ def select_options(
         get_options: GetPartOptionsFunc) -> Iterable[PartOption]:
     selected = []
     for part in parts:
-        selected.append(
-            select_elem(get_options(part.id, selected), part.description.lower()))
+        selected.append(select_elem(
+            get_options(part.id, selected),
+            part.description.lower()))
     return selected
 
 
