@@ -113,5 +113,5 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository):
   def __enter__(self) -> 'SqlAlchemyPartOptionRepository':
     return self
   
-  def __exit__(self) -> None:
+  def __exit__(self, *args) -> None:
     self.close()

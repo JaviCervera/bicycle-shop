@@ -1,7 +1,7 @@
 from math import prod
 from typing import Iterable
 
-from catalog.domain import PartOption, PartOptionRepository
+from catalog.domain import PartOption, PartOptionId, PartOptionRepository
 from catalog.domain.validations import validate_iterable, validate_type
 
 class CalculatePriceCommand:
@@ -15,7 +15,7 @@ class CalculatePriceCommand:
     return sum([self._calc_price(opt, option_ids) for opt in selected])
 
   def _calc_price(
-      self, option: PartOption, used_option_ids: Iterable[int]) -> float:
+      self, option: PartOption, used_option_ids: Iterable[PartOptionId]) -> float:
     depending_opts = self._repo.list_depending_options(option.part_id)
     coefs = [self._repo.get_depending_option_price_coef(option.part_id, opt)
              for opt in depending_opts if opt in used_option_ids]

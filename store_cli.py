@@ -1,36 +1,23 @@
 from typing import Iterable
 
-from sqlalchemy import create_engine
-
-from catalog.application import CalculatePriceCommand, GetPartOptionsCommand, \
-  GetProductPartsCommand, GetProductsCommand
+from catalog.application import GetPartOptionsCommand, GetProductPartsCommand, \
+  GetProductsCommand
 from catalog.domain import PartOption, Product, ProductPart
-from catalog.sqlalchemy_infra import create_models, \
-  SqlAlchemyPartOptionRepository, SqlAlchemyProductPartRepository, \
-  SqlAlchemyProductRepository
-from test.integration.init_part_option_repository \
-  import init_part_option_repository
-from test.integration.init_product_part_repository \
-  import init_product_part_repository
-from test.integration.init_product_reposity import init_product_repository
+
+from catalog_application import create_catalog_app
+
+catalog = create_catalog_app('http://localhost:8080')
 
 
 def main() -> None:
-  engine = create_engine('sqlite+pysqlite:///:memory:')
-  create_models(engine)
-  product_repo = SqlAlchemyProductRepository(engine)
-  part_repo = SqlAlchemyProductPartRepository(engine)
-  option_repo = SqlAlchemyPartOptionRepository(engine)
-  init_product_repository(product_repo)
-  init_product_part_repository(part_repo)
-  init_part_option_repository(option_repo)
-  get_products = GetProductsCommand(product_repo)
-  get_parts = GetProductPartsCommand(part_repo)
-  get_options = GetPartOptionsCommand(option_repo)
-  calculate_price = CalculatePriceCommand(option_repo)
-  product = select_product(get_products)
-  options = select_parts(product, get_parts, get_options)
-  display_order_summary(product, get_parts(product.id), options, calculate_price)
+  product = select_product(catalog.get_products)
+  options = select_parts(
+    product, catalog.get_product_parts, catalog.get_part_options)
+  display_order_summary(
+    product,
+    catalog.get_product_parts(product.id),
+    options,
+    catalog.calculate_price(options))
 
 
 def select_product(get_products: GetProductsCommand) -> Product:
@@ -65,14 +52,14 @@ def display_order_summary(
     product: Product,
     parts: Iterable[ProductPart],
     selected: Iterable[PartOption],
-    calculate_price: CalculatePriceCommand) -> None:
+    price: float) -> None:
   print()
   print(f'Your {product.description} order:')
   for opt in selected:
     part = [part for part in parts if part.id == opt.part_id][0]
     print(f'* {part.description}: {opt.description}')
   print()
-  print(f'Total price: {calculate_price(selected)}')
+  print(f'Total price: {price}')
 
 
 if __name__ == '__main__':

@@ -51,5 +51,5 @@ class SqlAlchemyProductPartRepository(ProductPartRepository):
   def __enter__(self) -> 'SqlAlchemyProductPartRepository':
     return self
   
-  def __exit__(self) -> None:
+  def __exit__(self, *args) -> None:
     self.close()

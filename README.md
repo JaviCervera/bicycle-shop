@@ -53,6 +53,34 @@ These kinds of variations can always happen, and they might depend on any of the
 5. The price of a product is calculated by adding up the individual prices of each selected part.
 6. The price of the options in some parts might depend on which options were selected for other parts.
 
+## Requirements conformance
+
+1. The store must be able to sell different kinds of products.
+
+> This requirement is satisfied by providing a `GetProductsCommand` class that can return an arbitrary number of `Product`s.
+
+2. Each product is divided in different parts that the client can customize by choosing from several options for each part.
+
+> `GetProductPartsCommand` returns the list of `ProductPart`s available for a specific product. `GetPartOptions` returns the options available for a given part.
+
+3. The option selected for a part might be incompatible with other options of any parts.
+
+> `PartOptionRepository` can provide a list of `PartOption`s which are incompatible with another one.
+> `GetPartOptionsCommand` returns the options available for a part based on other options selected.
+
+4. You can't select options which are out of stock.
+
+> `PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option would be in stock if its value is > 0, and would decrease with each order purchased that contains the option.
+> `GetPartOptionsCommand` returns only options which are in stock.
+
+5. The price of a product is calculated by adding up the individual prices of each selected part.
+
+> `CalculatePriceCommand` computes the total price from a list of parts.
+
+6. The price of the options in some parts might depend on which options were selected for other parts.
+
+> `CalculatePriceCommand` takes into account if a selected option modifies other options in the list.
+
 ## Data model
 
 ```
@@ -110,36 +138,16 @@ option_price_modifiers:
 - coef
 ```
 
-## Requirements conformance
+## User Actions
 
-1. The store must be able to sell different kinds of products.
+### products
 
-> This requirement is satisfied by providing a `ProductRepository` that can return an arbitrary number of `Product`s.
+### product_parts?<product>
 
-2. Each product is divided in different parts that the client can customize by choosing from several options for each part.
+### part_options?<product_part>&<selected_options>
 
-> `ProductPartRepository` can return the list of parts available for a specific `Product`. `PartOptionRepository` can returns the options available for a given `ProductPart`.
-
-3. The option selected for a part might be incompatible with other options of any parts.
-
-> `PartOptionRepository` can provide a list of `PartOption`s which are incompatible with another one.
-> `GetPartOptionsCommand` returns the options available for a part based on other options selected.
-
-4. You can't select options which are out of stock.
-
-> `PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option would be in stock if its value is > 0, and would decrease with each order purchased that contains the option.
-> `GetPartOptionsCommand` returns only options which are in stock.
-
-5. The price of a product is calculated by adding up the individual prices of each selected part.
-
-> `CalculatePriceCommand` computes the total price from a list of parts.
-
-6. The price of the options in some parts might depend on which options were selected for other parts.
-
-> `CalculatePriceCommand` takes into account if a selected option modifies other options in the list.
+### price?<selected_options>
 
 ## TODO:
 
-- [ ] Lint & test CI jobs.
-- [ ] Backend split.
-- [ ] Logging.
+- Logging.
