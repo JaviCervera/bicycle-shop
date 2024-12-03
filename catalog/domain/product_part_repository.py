@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Optional
 
-from .models import ProductId, ProductPart, ProductPartId
+from .product import ProductId
+from .product_part import ProductPart, ProductPartId
 
 
 class ProductPartRepository(ABC):

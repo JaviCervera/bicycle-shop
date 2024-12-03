@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Optional
 
-from .models import PartOption, PartOptionId, ProductPartId
-
+from .part_option import PartOption, PartOptionId
+from .product_part import ProductPartId
 
 class PartOptionRepository(ABC):
     @abstractmethod

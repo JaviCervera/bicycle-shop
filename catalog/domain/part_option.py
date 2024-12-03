@@ -1,32 +1,9 @@
 from dataclasses import dataclass
 
+from .product_part import ProductPartId
 from .validations import validate_id, validate_type
 
-ProductId = int
-ProductPartId = int
 PartOptionId = int
-
-
-@dataclass(frozen=True)
-class Product:
-    id: ProductId
-    description: str
-
-    def __post_init__(self):
-        validate_id(self.id, 'Product.id')
-        validate_type(self.description, str, 'Product.description')
-
-
-@dataclass(frozen=True)
-class ProductPart:
-    id: ProductPartId
-    product_id: ProductId
-    description: str
-
-    def __post_init__(self):
-        validate_id(self.id, 'ProductPart.id')
-        validate_id(self.product_id, 'ProductPart.product_id')
-        validate_type(self.description, str, 'ProductPart.description')
 
 
 @dataclass(frozen=True)
