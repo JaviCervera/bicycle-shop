@@ -1,10 +1,11 @@
 from typing import Iterable, Optional
 
-from sqlalchemy import Engine, select
-from sqlalchemy.orm import Mapped, mapped_column, Session
+from sqlalchemy import select
+from sqlalchemy.orm import Mapped, mapped_column
 
 from catalog.domain import Product, ProductId, ProductRepository
 from .sqlalchemy_base import SqlAlchemyBase
+from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
 
 class ProductModel(SqlAlchemyBase):
@@ -13,11 +14,7 @@ class ProductModel(SqlAlchemyBase):
     description: Mapped[str]
 
 
-class SqlAlchemyProductRepository(ProductRepository):
-    def __init__(self, engine: Engine):
-        self._engine = engine
-        self._session = Session(engine)
-
+class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
     def list(self) -> Iterable[ProductId]:
         return [row.id
                 for row in self._session.execute(select(ProductModel.id)).all()]
@@ -33,15 +30,3 @@ class SqlAlchemyProductRepository(ProductRepository):
         self._session.add(model)
         self._session.flush()
         return Product(model.id, model.description)
-
-    def commit(self) -> None:
-        self._session.commit()
-
-    def close(self) -> None:
-        self._session.close()
-
-    def __enter__(self) -> 'SqlAlchemyProductRepository':
-        return self
-
-    def __exit__(self, *args) -> None:
-        self.close()

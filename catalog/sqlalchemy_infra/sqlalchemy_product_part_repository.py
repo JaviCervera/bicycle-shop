@@ -1,11 +1,12 @@
 from typing import Iterable, Optional
 
-from sqlalchemy import Engine, select
-from sqlalchemy.orm import Mapped, mapped_column, Session
+from sqlalchemy import select
+from sqlalchemy.orm import Mapped, mapped_column
 
 from catalog.domain import ProductId, ProductPart, ProductPartId, \
     ProductPartRepository
 from .sqlalchemy_base import SqlAlchemyBase
+from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
 
 class ProductPartModel(SqlAlchemyBase):
@@ -15,11 +16,7 @@ class ProductPartModel(SqlAlchemyBase):
     description: Mapped[str]
 
 
-class SqlAlchemyProductPartRepository(ProductPartRepository):
-    def __init__(self, engine: Engine):
-        self._engine = engine
-        self._session = Session(engine)
-
+class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepository):
     def list(self, product_id: ProductId = None) -> Iterable[ProductPartId]:
         stmt = select(ProductPartModel.id)
         if product_id:
@@ -43,15 +40,3 @@ class SqlAlchemyProductPartRepository(ProductPartRepository):
             id=model.id,
             product_id=model.product_id,
             description=model.description)
-
-    def commit(self) -> None:
-        self._session.commit()
-
-    def close(self) -> None:
-        self._session.close()
-
-    def __enter__(self) -> 'SqlAlchemyProductPartRepository':
-        return self
-
-    def __exit__(self, *args) -> None:
-        self.close()

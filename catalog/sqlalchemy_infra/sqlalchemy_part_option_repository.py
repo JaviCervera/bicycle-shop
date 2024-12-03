@@ -1,11 +1,12 @@
 from typing import Iterable, Optional
 
-from sqlalchemy import Engine, select
-from sqlalchemy.orm import Mapped, mapped_column, Session
+from sqlalchemy import  select
+from sqlalchemy.orm import Mapped, mapped_column
 
 from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
     ProductPartId
 from .sqlalchemy_base import SqlAlchemyBase
+from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
 
 class PartOptionModel(SqlAlchemyBase):
@@ -32,11 +33,7 @@ class OptionPriceModifierModel(SqlAlchemyBase):
     coef: Mapped[float]
 
 
-class SqlAlchemyPartOptionRepository(PartOptionRepository):
-    def __init__(self, engine: Engine):
-        self._engine = engine
-        self._session = Session(engine)
-
+class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseRepository):
     def list(self, part_id: ProductPartId = None) -> Iterable[PartOptionId]:
         stmt = select(PartOptionModel.id)
         if part_id:
@@ -118,15 +115,3 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository):
             coef=coef)
         self._session.add(model)
         self._session.flush()
-
-    def commit(self) -> None:
-        self._session.commit()
-
-    def close(self) -> None:
-        self._session.close()
-
-    def __enter__(self) -> 'SqlAlchemyPartOptionRepository':
-        return self
-
-    def __exit__(self, *args) -> None:
-        self.close()
