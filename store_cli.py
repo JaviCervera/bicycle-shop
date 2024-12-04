@@ -34,7 +34,7 @@ def print_welcome_message(url: Optional[str]) -> None:
     if url:
         print(f'Running on {url}')
     else:
-        print(f'Running in local mode')
+        print('Running in local mode')
     print()
 
 
@@ -63,7 +63,7 @@ def select_elem(names: Sequence[str], prices: Sequence[float], type_: str) -> in
         price_str = f' - {prices[i]} EUR' if len(prices) > i else ''
         print(f'{i + 1}: {names[i]}{price_str}')
     while True:
-        selected = input(f'> ')
+        selected = input('> ')
         if not selected.isdigit() \
                 or int(selected) not in range(1, len(names) + 1):
             print(f'Please enter a number between 1 and {len(names)}')
