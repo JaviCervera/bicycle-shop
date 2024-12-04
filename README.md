@@ -86,7 +86,7 @@ These kinds of variations can always happen, and they might depend on any of the
 ```
 # 1, Bicycles
 products:
-- id
+- id *
 - description
 
 # 1, 1, Frame type
@@ -95,7 +95,7 @@ products:
 # 4, 1, Rim color
 # 5, 1, Chain
 product_parts:
-- id
+- id *
 - product_id
 - description
 
@@ -113,28 +113,26 @@ product_parts:
 # 12, 5, Single-speed chain, 43, True
 # 13, 5, 8-speed chain, 90, False
 part_options:
-- id
+- id *
 - part_id
 - description
 - price
 - in_stock
 
-# 1, 2, 7
-# 2, 3, 7
-# 3, 8, 9
+# 2, 7
+# 3, 7
+# 8, 9
 option_incompatibilities:
-- id
-- option_id
-- incompatible_option_id
+- option_id *
+- incompatible_option_id *
 
-# 1, 2, 2, 0.7
+# 2, 2, 0.7
 # Any items in part_id will get their price modified by coef if
 # depending_option_id is selected (which itself might belong to a different
 # part_id)
 option_price_modifiers:
-- id
-- part_id
-- depending_option_id
+- part_id *
+- depending_option_id *
 - coef
 ```
 

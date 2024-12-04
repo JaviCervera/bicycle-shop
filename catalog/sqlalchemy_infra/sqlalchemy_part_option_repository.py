@@ -20,16 +20,14 @@ class PartOptionModel(SqlAlchemyBase):
 
 class OptionIncompatibilityModel(SqlAlchemyBase):
     __tablename__ = 'option_incompatibilities'
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    option_id: Mapped[int]
-    incompatible_option_id: Mapped[int]
+    option_id: Mapped[int] = mapped_column(primary_key=True)
+    incompatible_option_id: Mapped[int] = mapped_column(primary_key=True)
 
 
 class OptionPriceModifierModel(SqlAlchemyBase):
     __tablename__ = 'option_price_modifiers'
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    part_id: Mapped[int]
-    depending_option_id: Mapped[int]
+    part_id: Mapped[int] = mapped_column(primary_key=True)
+    depending_option_id: Mapped[int] = mapped_column(primary_key=True)
     coef: Mapped[float]
 
 
