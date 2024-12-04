@@ -28,9 +28,9 @@ class GetPartOptionsCommand:
 
     def _all_incompatibilities(
             self, selected_options: Iterable[PartOption]) -> Iterable[int]:
-        return set(chain.from_iterable(
-            [self._repo.list_incompatibilities(opt.id)
-             for opt in selected_options]))
+        incomps = [self._repo.list_incompatibilities(opt.id)
+                   for opt in selected_options]
+        return set(chain.from_iterable(incomps))
 
     @staticmethod
     def _in_stock(options: Iterable[PartOption]) -> Iterable[PartOption]:

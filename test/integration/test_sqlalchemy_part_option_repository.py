@@ -50,13 +50,17 @@ class TestSqlAlchemyPartOptionRepository(TestCase):
     def test_get_invalid_option(self):
         self.assertIsNone(self._repo.get(14))
 
-    def test_get_incompatibilities_for_option(self):
-        self.assertEqual([7], self._repo.list_incompatibilities(2))
-        self.assertEqual([7], self._repo.list_incompatibilities(3))
-        self.assertEqual([9], self._repo.list_incompatibilities(8))
+    def test_list_incompatibilities(self):
+        self.assertEqual([7], list(self._repo.list_incompatibilities(2)))
+        self.assertEqual([7], list(self._repo.list_incompatibilities(3)))
+        self.assertEqual([9], list(self._repo.list_incompatibilities(8)))
+
+        # Check if it can return the incompatibilities in the reverse order
+        self.assertEqual([2, 3], list(self._repo.list_incompatibilities(7)))
+        self.assertEqual([8], list(self._repo.list_incompatibilities(9)))
 
     def test_get_incompatibilities_for_invalid_option(self):
-        self.assertEqual([], self._repo.list_incompatibilities(1))
+        self.assertEqual([], list(self._repo.list_incompatibilities(1)))
 
     def test_get_price_modifiers(self):
         depending_options = self._repo.list_depending_options(2)

@@ -122,9 +122,12 @@ part_options:
 # 2, 7
 # 3, 7
 # 8, 9
+# Incompatibilies must be handled both ways, this is, if
+# option_a is incompatible with option_b, then option_b
+# is incompatible with option_a
 option_incompatibilities:
-- option_id *
-- incompatible_option_id *
+- option_a *
+- option_b *
 
 # 2, 2, 0.7
 # Any items in part_id will get their price modified by coef if

@@ -20,8 +20,8 @@ class PartOptionModel(SqlAlchemyBase):
 
 class OptionIncompatibilityModel(SqlAlchemyBase):
     __tablename__ = 'option_incompatibilities'
-    option_id: Mapped[int] = mapped_column(primary_key=True)
-    incompatible_option_id: Mapped[int] = mapped_column(primary_key=True)
+    option_a: Mapped[int] = mapped_column(primary_key=True)
+    option_b: Mapped[int] = mapped_column(primary_key=True)
 
 
 class OptionPriceModifierModel(SqlAlchemyBase):
@@ -70,18 +70,22 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
 
     def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
-        result = self._session.execute(
-            select(OptionIncompatibilityModel.incompatible_option_id) \
-                .where(OptionIncompatibilityModel.option_id == id_)).all()
-        return [row.incompatible_option_id for row in result]
+        result_a = self._session.execute(
+            select(OptionIncompatibilityModel.option_a) \
+                .where(OptionIncompatibilityModel.option_b == id_)).all()
+        result_b = self._session.execute(
+            select(OptionIncompatibilityModel.option_b) \
+                .where(OptionIncompatibilityModel.option_a == id_)).all()
+        return set([row.option_a for row in result_a]
+                   + [row.option_b for row in result_b])
 
     def create_incompatibility(
             self,
-            option_id: PartOptionId,
-            incompatible_option_id: PartOptionId) -> None:
+            option_a: PartOptionId,
+            option_b: PartOptionId) -> None:
         self._session.add(OptionIncompatibilityModel(
-            option_id=option_id,
-            incompatible_option_id=incompatible_option_id))
+            option_a=min(option_a, option_b),
+            option_b=max(option_a, option_b)))
         self._session.flush()
 
     def list_depending_options(
