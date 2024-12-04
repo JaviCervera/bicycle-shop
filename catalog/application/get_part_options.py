@@ -29,7 +29,7 @@ class GetPartOptionsCommand:
     def _all_incompatibilities(
             self, selected_options: Iterable[PartOption]) -> Iterable[int]:
         return chain.from_iterable(
-            [self._repo.list_incompatibilies(opt.id)
+            [self._repo.list_incompatibilities(opt.id)
              for opt in selected_options])
 
     @staticmethod

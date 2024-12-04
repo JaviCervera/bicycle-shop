@@ -70,7 +70,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             price=model.price,
             in_stock=model.in_stock)
 
-    def list_incompatibilies(
+    def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
         result = self._session.execute(
             select(OptionIncompatibilityModel.incompatible_option_id) \

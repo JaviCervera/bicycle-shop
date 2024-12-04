@@ -41,7 +41,7 @@ class MockPartOptionRepository(PartOptionRepository):
             in_stock: bool) -> PartOption:
         pass
 
-    def list_incompatibilies(
+    def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
         incompatibilities = {
             2: [7],

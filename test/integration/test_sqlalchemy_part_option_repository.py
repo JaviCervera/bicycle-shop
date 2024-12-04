@@ -51,12 +51,12 @@ class TestSqlAlchemyPartOptionRepository(TestCase):
         self.assertIsNone(self._repo.get(14))
 
     def test_get_incompatibilities_for_option(self):
-        self.assertEqual([7], self._repo.list_incompatibilies(2))
-        self.assertEqual([7], self._repo.list_incompatibilies(3))
-        self.assertEqual([9], self._repo.list_incompatibilies(8))
+        self.assertEqual([7], self._repo.list_incompatibilities(2))
+        self.assertEqual([7], self._repo.list_incompatibilities(3))
+        self.assertEqual([9], self._repo.list_incompatibilities(8))
 
     def test_get_incompatibilities_for_invalid_option(self):
-        self.assertEqual([], self._repo.list_incompatibilies(1))
+        self.assertEqual([], self._repo.list_incompatibilities(1))
 
     def test_get_price_modifiers(self):
         depending_options = self._repo.list_depending_options(2)
