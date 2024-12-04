@@ -11,7 +11,7 @@ class CalculatePriceCommand:
         self._repo = repo
 
     def __call__(self, selected: Iterable[PartOption]) -> float:
-        validate_iterable(selected, 'selected')
+        validate_iterable(selected, PartOption, 'selected')
         option_ids = [opt.id for opt in selected]
         return sum([self._calc_price(opt, option_ids) for opt in selected])
 

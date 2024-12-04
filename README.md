@@ -150,4 +150,9 @@ option_price_modifiers:
 
 ## TODO:
 
+- Check if all use cases commit at the end.
+- option_incompatibilities should use option_id and incompatible_option_id
+  as primary keys (no need for id).
+- Ids should be of their own classes with invariant checking, not int alias
+  (validate_id will no longer be necessary and validate_type will be used).
 - Logging.

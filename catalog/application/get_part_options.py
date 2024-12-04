@@ -15,7 +15,7 @@ class GetPartOptionsCommand:
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
         validate_type(part_id, ProductPartId, 'part_id')
-        validate_iterable(selected, 'selected')
+        validate_iterable(selected, PartOption, 'selected')
         return self._in_stock(self._compatible(part_id, selected))
 
     def _compatible(
