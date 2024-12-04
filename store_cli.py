@@ -1,73 +1,46 @@
-import os
-from typing import Callable, Iterable, Union
+from argparse import ArgumentParser
+from typing import Callable, Iterable, Optional, Sequence
 
-import requests
-
-from catalog.domain import PartOption, Product, ProductId, ProductPart, \
+from catalog.domain import PartOption, Product, ProductPart, \
     ProductPartId
-from catalog.sqlalchemy_infra import Application
+from cli_app import create_app
 
 GetPartOptionsFunc = \
     Callable[[ProductPartId, Iterable[PartOption]], Iterable[PartOption]]
 
-class ApplicationProxy:
-    def __init__(self, url: str) -> None:
-        self._base_url = url
-
-    def calculate_price(self, selected: Iterable[PartOption]) -> float:
-        result = requests.get(os.path.join(self._base_url, 'price'), params={
-            'selected_options': self._join_options(selected),
-        })
-        result.raise_for_status()
-        return float(result.json()['price'])
-
-    @staticmethod
-    def _join_options(options: Iterable[PartOption]) -> str:
-        return ','.join([str(opt.id) for opt in options])
-
-    def get_part_options(
-            self,
-            part_id: ProductPartId,
-            selected: Iterable[PartOption]) -> Iterable[PartOption]:
-        result = requests.get(os.path.join(self._base_url, 'part_options'), params={
-            'product_part': part_id,
-            'selected_options': self._join_options(selected),
-        })
-        result.raise_for_status()
-        return [PartOption(**opt) for opt in result.json()]
-
-    def get_product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
-        result = requests.get(os.path.join(self._base_url, 'product_parts'), params={
-            'product': product_id,
-        })
-        result.raise_for_status()
-        return [ProductPart(**part) for part in result.json()]
-
-    def get_products(self) -> Iterable[Product]:
-        result = requests.get(os.path.join(self._base_url, 'products'))
-        result.raise_for_status()
-        return [Product(**product) for product in result.json()]
-
-
-def create_app(url: str = None) -> Union[Application, ApplicationProxy]:
-    return ApplicationProxy(url) if url \
-        else Application('sqlite+pysqlite:///:memory:')
-
 
 def main() -> None:
-    catalog = create_app('http://localhost:8080')
-    product = select_product(catalog.get_products())
-    parts = catalog.get_product_parts(product.id)
-    options = select_options(parts, catalog.get_part_options)
-    display_order_summary(
-        product,
-        parts,
-        options,
-        catalog.calculate_price(options))
+    url = server_url()
+    print_welcome_message(url)
+    with create_app(url) as app:
+        product = select_product(app.get_products())
+        parts = app.get_product_parts(product.id)
+        options = select_options(parts, app.get_part_options)
+        display_order_summary(
+            product,
+            parts,
+            options,
+            app.calculate_price(options))
+
+
+def server_url() -> Optional[str]:
+    parser = ArgumentParser()
+    parser.add_argument('-u', '--url')
+    return parser.parse_args().url
+
+
+def print_welcome_message(url: Optional[str]) -> None:
+    print('Welcome to Markus Sports Equipment Store!')
+    if url:
+        print(f'Running on {url}')
+    else:
+        print(f'Running in local mode')
+    print()
 
 
 def select_product(products: Iterable[Product]) -> Product:
-    return select_elem(products, 'product')
+    sel_index = select_elem([p.description for p in products], [], 'product')
+    return list(products)[sel_index]
 
 
 def select_options(
@@ -75,24 +48,28 @@ def select_options(
         get_options: GetPartOptionsFunc) -> Iterable[PartOption]:
     selected = []
     for part in parts:
-        selected.append(select_elem(
-            get_options(part.id, selected),
-            part.description.lower()))
+        options = list(get_options(part.id, selected))
+        sel_option = select_elem(
+            [opt.description for opt in options],
+            [opt.price for opt in options],
+            part.description.lower())
+        selected.append(options[sel_option])
     return selected
 
 
-def select_elem(elems: Iterable, type_):
-    elems = list(elems)
-    for i, elem in enumerate(elems):
-        print(f'{i + 1}: {elem.description}')
+def select_elem(names: Sequence[str], prices: Sequence[float], type_: str) -> int:
+    print(f'Select {type_}:')
+    for i in range(len(names)):
+        price_str = f' - {prices[i]} EUR' if len(prices) > i else ''
+        print(f'{i + 1}: {names[i]}{price_str}')
     while True:
-        selected = input(f'Select {type_}: ')
+        selected = input(f'> ')
         if not selected.isdigit() \
-                or int(selected) not in range(1, len(elems) + 1):
-            print(f'Please enter a number between 1 and {len(elems)}')
+                or int(selected) not in range(1, len(names) + 1):
+            print(f'Please enter a number between 1 and {len(names)}')
         else:
             print()
-            return elems[int(selected) - 1]
+            return int(selected) - 1
 
 
 def display_order_summary(
@@ -106,7 +83,7 @@ def display_order_summary(
         part = [part for part in parts if part.id == opt.part_id][0]
         print(f'* {part.description}: {opt.description}')
     print()
-    print(f'Total price: {price}')
+    print(f'Total price: {price} EUR')
 
 
 if __name__ == '__main__':
