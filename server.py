@@ -1,8 +1,8 @@
 import json
 from typing import Iterable
 
-import cherrypy
-import cherrypy_cors
+import cherrypy  # type: ignore
+import cherrypy_cors  # type: ignore
 
 from catalog.domain import PartOption, PartOptionRepository
 from catalog.sqlalchemy_infra import Application
@@ -44,7 +44,10 @@ class Server:
 
     @staticmethod
     def parse_options(options: str, repo: PartOptionRepository) -> Iterable[PartOption]:
-        return [repo.get(int(opt.strip())) for opt in options.split(',')] if options else []
+        if options:
+            return [repo.get(int(opt.strip())) for opt in options.split(',')]  # type: ignore
+        else:
+            return []
 
     @staticmethod
     def app() -> Application:

@@ -1,8 +1,7 @@
 from argparse import ArgumentParser
-from typing import Callable, Iterable, Optional, Sequence
+from typing import Callable, Iterable, List, Optional, Sequence
 
-from catalog.domain import PartOption, Product, ProductPart, \
-    ProductPartId
+from catalog.domain import PartOption, Product, ProductPart, ProductPartId
 from cli_app import create_app
 
 GetPartOptionsFunc = \
@@ -46,7 +45,7 @@ def select_product(products: Iterable[Product]) -> Product:
 def select_options(
         parts: Iterable[ProductPart],
         get_options: GetPartOptionsFunc) -> Iterable[PartOption]:
-    selected = []
+    selected: List[PartOption] = []
     for part in parts:
         options = list(get_options(part.id, selected))
         sel_option = select_elem(

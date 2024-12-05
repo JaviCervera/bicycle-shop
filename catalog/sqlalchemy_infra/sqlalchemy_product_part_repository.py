@@ -17,7 +17,9 @@ class ProductPartModel(SqlAlchemyBase):
 
 
 class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepository):
-    def list(self, product_id: ProductId = None) -> Iterable[ProductPartId]:
+    def list(
+            self,
+            product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
         stmt = select(ProductPartModel.id)
         if product_id:
             stmt = stmt.where(ProductPartModel.product_id == product_id)

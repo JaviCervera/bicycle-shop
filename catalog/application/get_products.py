@@ -10,4 +10,4 @@ class GetProductsCommand:
         self._repo = repo
 
     def __call__(self) -> Iterable[Product]:
-        return [self._repo.get(id_) for id_ in self._repo.list()]
+        return [self._repo.get(id_) for id_ in self._repo.list()]  # type: ignore

@@ -21,7 +21,9 @@ class MockPartOptionRepository(PartOptionRepository):
         PartOption(13, 5, '8-speed chain', 90, False),
     ]
 
-    def list(self, part_id: ProductPartId = None) -> Iterable[PartOptionId]:
+    def list(
+            self,
+            part_id: Optional[ProductPartId] = None) -> Iterable[PartOptionId]:
         if part_id is None:
             return [opt.id for opt in self._options]
         else:
@@ -39,7 +41,7 @@ class MockPartOptionRepository(PartOptionRepository):
             description: str,
             price: float,
             in_stock: bool) -> PartOption:
-        pass
+        raise NotImplementedError()
 
     def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:

@@ -7,7 +7,9 @@ from .product_part import ProductPart, ProductPartId
 
 class ProductPartRepository(ABC):
     @abstractmethod
-    def list(self, product_id: ProductId = None) -> Iterable[ProductPartId]:
+    def list(
+            self,
+            product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
         pass
 
     @abstractmethod

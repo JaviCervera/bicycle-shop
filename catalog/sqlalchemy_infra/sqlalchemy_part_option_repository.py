@@ -32,7 +32,9 @@ class OptionPriceModifierModel(SqlAlchemyBase):
 
 
 class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseRepository):
-    def list(self, part_id: ProductPartId = None) -> Iterable[PartOptionId]:
+    def list(
+            self,
+            part_id: Optional[ProductPartId] = None) -> Iterable[PartOptionId]:
         stmt = select(PartOptionModel.id)
         if part_id:
             stmt = stmt.where(PartOptionModel.part_id == part_id)

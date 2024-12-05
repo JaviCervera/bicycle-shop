@@ -1,5 +1,5 @@
 import os
-from typing import Iterable, Self, Union
+from typing import Iterable, Optional, Self, Union
 
 import requests
 
@@ -27,7 +27,7 @@ class ApplicationProxy:
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
         result = requests.get(os.path.join(self._base_url, 'part_options'), params={
-            'product_part': part_id,
+            'product_part': str(part_id),
             'selected_options': self._join_options(selected),
         })
         result.raise_for_status()
@@ -52,6 +52,7 @@ class ApplicationProxy:
         pass
 
 
-def create_app(url: str = None) -> Union[Application, ApplicationProxy]:
+def create_app(
+        url: Optional[str] = None) -> Union[Application, ApplicationProxy]:
     return ApplicationProxy(url) if url \
         else Application('sqlite+pysqlite:///:memory:')

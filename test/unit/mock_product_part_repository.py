@@ -5,7 +5,9 @@ from catalog.domain import ProductId, ProductPart, ProductPartId, \
 
 
 class MockProductPartRepository(ProductPartRepository):
-    def list(self, product_id: ProductId = None) -> Iterable[ProductPartId]:
+    def list(
+            self,
+            product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
         if product_id in (None, 1):
             return [1, 2, 3, 4, 5]
         else:
@@ -25,4 +27,4 @@ class MockProductPartRepository(ProductPartRepository):
             return None
 
     def create(self, product_id: ProductId, description: str) -> ProductPart:
-        pass
+        raise NotImplementedError()

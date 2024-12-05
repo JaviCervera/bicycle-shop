@@ -16,7 +16,7 @@ class SqlAlchemyBaseRepository(ABC):
     def close(self) -> None:
         if self._session:
             self._session.close()
-        self._session = None
+        self._session = None  # type: ignore
 
     def __enter__(self) -> Self:
         return self

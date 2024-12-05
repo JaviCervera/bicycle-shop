@@ -22,7 +22,7 @@ class GetPartOptionsCommand:
             self,
             part_id: ProductPartId,
             selected_options: Iterable[PartOption]) -> Iterable[PartOption]:
-        return [self._repo.get(opt)
+        return [self._repo.get(opt)  # type: ignore
                 for opt in self._repo.list(part_id)
                 if opt not in self._all_incompatibilities(selected_options)]
 

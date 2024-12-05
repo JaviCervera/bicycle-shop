@@ -11,4 +11,4 @@ class GetProductPartsCommand:
 
     def __call__(self, product_id: ProductId) -> Iterable[ProductPart]:
         validate_type(product_id, ProductId, 'product_id')
-        return [self._repo.get(id_) for id_ in self._repo.list(product_id)]
+        return [self._repo.get(id_) for id_ in self._repo.list(product_id)]  # type: ignore
