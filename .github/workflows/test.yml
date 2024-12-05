@@ -12,7 +12,9 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies 📥
         run: pip install -r requirements-dev.txt
-      - name: Lint 🔍
+      - name: 'Linting: mypy 🔍'
+        run: mypy .
+      - name: 'Linting: ruff 🔍'
         run: python -m ruff check .
       - name: Test 🧪
         run: pytest --cov
