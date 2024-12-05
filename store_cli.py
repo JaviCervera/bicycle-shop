@@ -1,3 +1,4 @@
+import logging
 from argparse import ArgumentParser
 from typing import Callable, Iterable, List, Optional, Sequence
 
@@ -9,6 +10,7 @@ GetPartOptionsFunc = \
 
 
 def main() -> None:
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
     url = server_url()
     print_welcome_message(url)
     with create_app(url) as app:

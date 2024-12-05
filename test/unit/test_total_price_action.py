@@ -1,3 +1,4 @@
+import logging
 from unittest import TestCase
 
 from catalog.application import TotalPriceAction
@@ -5,10 +6,10 @@ from catalog.domain import PartOption
 from .mock_part_option_repository import MockPartOptionRepository
 
 
-class TestCalculatePriceCommand(TestCase):
+class TestTotalPriceAction(TestCase):
     def setUp(self):
         self.repo = MockPartOptionRepository()
-        self.total_price = TotalPriceAction(self.repo)
+        self.total_price = TotalPriceAction(self.repo, logging.getLogger())
 
     def test_prices_witout_modifiers(self):
         self.assertEqual(

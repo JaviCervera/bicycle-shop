@@ -151,7 +151,7 @@ option_price_modifiers:
 
 ## TODO:
 
-- Logging.
+- Runtime type validations should not be needed using mypy linting.
 - Comment methods.
 - OpenAPI specification.
 - Data model diagram.

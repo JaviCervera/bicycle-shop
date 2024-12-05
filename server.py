@@ -1,4 +1,6 @@
 import json
+import logging
+import sys
 from typing import Iterable
 
 import cherrypy  # type: ignore
@@ -51,7 +53,9 @@ class Server:
 
     @staticmethod
     def app() -> Application:
-        app = Application('sqlite+pysqlite:///:memory:', True)
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+        logger = logging.getLogger()
+        app = Application('sqlite+pysqlite:///:memory:', logger)
         init_product_repository(app.product_repo)
         init_product_part_repository(app.part_repo)
         init_part_option_repository(app.option_repo)

@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Iterable, Optional, Self, Union
 
@@ -6,6 +7,12 @@ import requests
 from catalog.domain import PartOption, Product, ProductId, ProductPart, \
     ProductPartId
 from catalog.sqlalchemy_infra import Application
+from test.integration.init_part_option_repository \
+    import init_part_option_repository
+from test.integration.init_product_part_repository \
+    import init_product_part_repository
+from test.integration.init_product_reposity import init_product_repository
+
 
 class ApplicationProxy:
     def __init__(self, url: str) -> None:
@@ -54,5 +61,11 @@ class ApplicationProxy:
 
 def create_app(
         url: Optional[str] = None) -> Union[Application, ApplicationProxy]:
-    return ApplicationProxy(url) if url \
-        else Application('sqlite+pysqlite:///:memory:')
+    if url:
+        return ApplicationProxy(url)
+    else:
+        app = Application('sqlite+pysqlite:///:memory:', logging.getLogger())
+        init_product_repository(app.product_repo)
+        init_product_part_repository(app.part_repo)
+        init_part_option_repository(app.option_repo)
+        return app
