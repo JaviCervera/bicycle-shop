@@ -12,14 +12,14 @@ def main() -> None:
     url = server_url()
     print_welcome_message(url)
     with create_app(url) as app:
-        product = select_product(app.get_products())
-        parts = app.get_product_parts(product.id)
-        options = select_options(parts, app.get_part_options)
+        product = select_product(app.products())
+        parts = app.product_parts(product.id)
+        options = select_options(parts, app.part_options)
         display_order_summary(
             product,
             parts,
             options,
-            app.calculate_price(options))
+            app.total_price(options))
 
 
 def server_url() -> Optional[str]:

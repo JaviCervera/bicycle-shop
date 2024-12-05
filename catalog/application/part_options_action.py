@@ -5,7 +5,7 @@ from catalog.domain import PartOption, PartOptionRepository, ProductPartId
 from catalog.domain.validations import validate_iterable, validate_type
 
 
-class GetPartOptionsCommand:
+class PartOptionsAction:
     def __init__(self, repo: PartOptionRepository):
         validate_type(repo, PartOptionRepository, 'repo')
         self._repo = repo

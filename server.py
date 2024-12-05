@@ -18,19 +18,19 @@ class Server:
     @cherrypy.expose
     def products(self) -> str:
         with self.app() as app:
-            return json.dumps([product.__dict__ for product in app.get_products()])
+            return json.dumps([product.__dict__ for product in app.products()])
 
     @cherrypy.expose
     def product_parts(self, product: str) -> str:
         with self.app() as app:
             return json.dumps([part.__dict__
-                               for part in app.get_product_parts(int(product))])
+                               for part in app.product_parts(int(product))])
 
     @cherrypy.expose
     def part_options(self, product_part: str, selected_options='') -> str:
         with self.app() as app:
             return json.dumps(
-                [opt.__dict__ for opt in app.get_part_options(
+                [opt.__dict__ for opt in app.part_options(
                     int(product_part),
                     self.parse_options(selected_options, app.option_repo))])
 
@@ -39,7 +39,7 @@ class Server:
         with self.app() as app:
             selected = self.parse_options(selected_options, app.option_repo)
             return json.dumps({
-                'price': app.calculate_price(selected)
+                'price': app.total_price(selected)
             })
 
     @staticmethod

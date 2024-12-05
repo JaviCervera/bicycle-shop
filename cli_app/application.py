@@ -11,18 +11,7 @@ class ApplicationProxy:
     def __init__(self, url: str) -> None:
         self._base_url = url
 
-    def calculate_price(self, selected: Iterable[PartOption]) -> float:
-        result = requests.get(os.path.join(self._base_url, 'price'), params={
-            'selected_options': self._join_options(selected),
-        })
-        result.raise_for_status()
-        return float(result.json()['price'])
-
-    @staticmethod
-    def _join_options(options: Iterable[PartOption]) -> str:
-        return ','.join([str(opt.id) for opt in options])
-
-    def get_part_options(
+    def part_options(
             self,
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
@@ -33,17 +22,28 @@ class ApplicationProxy:
         result.raise_for_status()
         return [PartOption(**opt) for opt in result.json()]
 
-    def get_product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
+    @staticmethod
+    def _join_options(options: Iterable[PartOption]) -> str:
+        return ','.join([str(opt.id) for opt in options])
+
+    def product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
         result = requests.get(os.path.join(self._base_url, 'product_parts'), params={
             'product': product_id,
         })
         result.raise_for_status()
         return [ProductPart(**part) for part in result.json()]
 
-    def get_products(self) -> Iterable[Product]:
+    def products(self) -> Iterable[Product]:
         result = requests.get(os.path.join(self._base_url, 'products'))
         result.raise_for_status()
         return [Product(**product) for product in result.json()]
+
+    def total_price(self, selected: Iterable[PartOption]) -> float:
+        result = requests.get(os.path.join(self._base_url, 'price'), params={
+            'selected_options': self._join_options(selected),
+        })
+        result.raise_for_status()
+        return float(result.json()['price'])
 
     def __enter__(self) -> Self:
         return self

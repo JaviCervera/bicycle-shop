@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from catalog.application import CalculatePriceCommand
+from catalog.application import TotalPriceAction
 from catalog.domain import PartOption
 from .mock_part_option_repository import MockPartOptionRepository
 
@@ -8,12 +8,12 @@ from .mock_part_option_repository import MockPartOptionRepository
 class TestCalculatePriceCommand(TestCase):
     def setUp(self):
         self.repo = MockPartOptionRepository()
-        self.calculate_price = CalculatePriceCommand(self.repo)
+        self.total_price = TotalPriceAction(self.repo)
 
     def test_prices_witout_modifiers(self):
         self.assertEqual(
             303,
-            self.calculate_price([
+            self.total_price([
                 self.find_option('Full-suspension'),
                 self.find_option('Shiny'),
                 self.find_option('Road wheels'),
@@ -26,7 +26,7 @@ class TestCalculatePriceCommand(TestCase):
         # Without the modifier, it would be 293
         self.assertEqual(
             278,
-            self.calculate_price([
+            self.total_price([
                 self.find_option('Diamond'),
                 self.find_option('Matte'),
                 self.find_option('Road wheels'),

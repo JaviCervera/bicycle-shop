@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from catalog.application import GetPartOptionsCommand
+from catalog.application import PartOptionsAction
 from catalog.domain import PartOption, ProductPartId
 from .mock_part_option_repository import MockPartOptionRepository
 from .mock_product_part_repository import MockProductPartRepository
@@ -10,7 +10,7 @@ class TestGetPartOptionsCommand(TestCase):
     def setUp(self):
         self.part_repo = MockProductPartRepository()
         self.option_repo = MockPartOptionRepository()
-        self.get_part_options = GetPartOptionsCommand(self.option_repo)
+        self.part_options = PartOptionsAction(self.option_repo)
 
     def test_only_returns_options_compatible_with_selection(self):
         self.assertEqual(
@@ -19,7 +19,7 @@ class TestGetPartOptionsCommand(TestCase):
                 self.find_option('Diamond'),
                 self.find_option('Step-through'),
             ],
-            self.get_part_options(self.find_part('Frame type'), [])
+            self.part_options(self.find_part('Frame type'), [])
         )
 
         self.assertEqual(
@@ -28,12 +28,12 @@ class TestGetPartOptionsCommand(TestCase):
                 self.find_option('Black'),
                 self.find_option('Blue')
             ],
-            self.get_part_options(self.find_part('Rim color'), [])
+            self.part_options(self.find_part('Rim color'), [])
         )
 
         self.assertEqual(
             [self.find_option('Full-suspension')],
-            self.get_part_options(
+            self.part_options(
                 self.find_part('Frame type'),
                 [self.find_option('Mountain wheels')]
             )
@@ -41,7 +41,7 @@ class TestGetPartOptionsCommand(TestCase):
 
         self.assertEqual(
             [self.find_option('Black'), self.find_option('Blue')],
-            self.get_part_options(
+            self.part_options(
                 self.find_part('Rim color'),
                 [self.find_option('Fat bike wheels')]
             )
@@ -50,7 +50,7 @@ class TestGetPartOptionsCommand(TestCase):
     def test_only_returns_options_in_stock(self):
         self.assertEqual(
             [self.find_option('Single-speed chain')],
-            self.get_part_options(
+            self.part_options(
                 self.find_part('Chain'),
                 [
                     self.find_option('Single-speed chain'),

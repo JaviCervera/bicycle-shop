@@ -4,7 +4,7 @@ from catalog.domain import Product, ProductRepository
 from catalog.domain.validations import validate_type
 
 
-class GetProductsCommand:
+class ProductsAction:
     def __init__(self, repo: ProductRepository):
         validate_type(repo, ProductRepository, 'repo')
         self._repo = repo

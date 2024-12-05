@@ -1,11 +1,11 @@
-from .calculate_price import CalculatePriceCommand
-from .get_part_options import GetPartOptionsCommand
-from .get_product_parts import GetProductPartsCommand
-from .get_products import GetProductsCommand
+from .part_options_action import PartOptionsAction
+from .product_parts_action import ProductPartsAction
+from .products_action import ProductsAction
+from .total_price_action import TotalPriceAction
 
 __all__ = [
-    'CalculatePriceCommand',
-    'GetPartOptionsCommand',
-    'GetProductPartsCommand',
-    'GetProductsCommand',
+    'PartOptionsAction',
+    'ProductPartsAction',
+    'ProductsAction',
+    'TotalPriceAction',
 ]
