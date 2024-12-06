@@ -38,11 +38,11 @@ class Server:
             return PartOptionSchema().dumps(options, many=True)
 
     @cherrypy.expose
-    def price(self, selected_options: str) -> str:
+    def part_options_price(self, selected_options: str) -> str:
         with self.app() as app:
             selected = self.parse_options(selected_options, app.option_repo)
             return json.dumps({
-                'price': float(app.total_price(selected))
+                'price': float(app.part_options_price(selected))
             })
 
     @staticmethod
@@ -63,4 +63,4 @@ class Server:
 
 if __name__ == '__main__':
     cherrypy_cors.install()
-    cherrypy.quickstart(Server())
+    cherrypy.quickstart(Server(), '/catalog')

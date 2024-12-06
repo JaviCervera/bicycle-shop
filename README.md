@@ -139,21 +139,154 @@ option_price_modifiers:
 - coef
 ```
 
-## User Actions
+## User Actions (OpenAPI specification)
 
-### products
-
-### product_parts?<product>
-
-### part_options?<product_part>&<selected_options>
-
-### price?<selected_options>
+```yaml
+openapi: 3.0.3
+info:
+  title: Markus Sports Equipment Store!
+  version: 1.0.0
+paths:
+  /catalog/products:
+    get:
+      summary: Retrieves a list of available products in the catalog
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /catalog/product_parts:
+    get:
+      summary: Get all parts available for the given product
+      parameters:
+        - name: product
+          in: query
+          description: Id of the product 
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductPart'
+  /catalog/part_options:
+    get:
+      summary: Get all options available for a part which are compatible with the already selected options
+      parameters:
+        - name: product_part
+          in: query
+          description: Id of the part 
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: selected_options
+          in: query
+          description: Ids of the selected options (for any part) 
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PartOption'
+  /catalog/part_options_price:
+    get:
+      summary: Get the total price of all options selected
+      parameters:
+        - name: selected_options
+          in: query
+          description: Ids of the selected options (for any part) 
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Price'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: Bicycles
+    ProductPart:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        product_id:
+          type: integer
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: Frame type
+    PartOption:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        part_id:
+          type: integer
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: Full-suspension
+        price:
+          type: number
+          format: float
+          example: 130.0
+        in_stock:
+          type: boolean
+          example: true
+    Price:
+      type: object
+      properties:
+        price:
+          type: number
+          format: float
+          example: 120.25
+```
 
 ## TODO:
 
-- Use Marshmallow to serialize SQLAlchemy models.
 - Comment methods.
-- OpenAPI specification.
 - Data model diagram.
 - CloudFormation template?
 - Update README.

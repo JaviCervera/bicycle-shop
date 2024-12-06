@@ -7,7 +7,7 @@ from catalog.domain import Money, PartOption, PartOptionId, \
 from .log import log
 
 
-class TotalPriceAction:
+class PartOptionsPriceAction:
     def __init__(self, repo: PartOptionRepository):
         self._repo = repo
 

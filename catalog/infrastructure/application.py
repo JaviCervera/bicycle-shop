@@ -2,8 +2,8 @@ from typing import Self
 
 from sqlalchemy import create_engine
 
-from catalog.application import PartOptionsAction, ProductPartsAction, \
-    ProductsAction, TotalPriceAction
+from catalog.application import PartOptionsAction, PartOptionsPriceAction, \
+    ProductPartsAction, ProductsAction
 from .sqlalchemy_base import create_models
 from .sqlalchemy_part_option_repository import SqlAlchemyPartOptionRepository
 from .sqlalchemy_product_part_repository import SqlAlchemyProductPartRepository
@@ -20,7 +20,7 @@ class Application:
         self.products = ProductsAction(self.product_repo)
         self.product_parts = ProductPartsAction(self.part_repo)
         self.part_options = PartOptionsAction(self.option_repo)
-        self.total_price = TotalPriceAction(self.option_repo)
+        self.part_options_price = PartOptionsPriceAction(self.option_repo)
 
     def __enter__(self) -> Self:
         self.product_repo.__enter__()

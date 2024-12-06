@@ -22,7 +22,7 @@ class ApplicationProxy:
             self,
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
-        result = requests.get(os.path.join(self._base_url, 'part_options'), params={
+        result = requests.get(os.path.join(self._base_url, 'catalog/part_options'), params={
             'product_part': str(part_id),
             'selected_options': self._join_options(selected),
         })
@@ -34,19 +34,19 @@ class ApplicationProxy:
         return ','.join([str(opt.id) for opt in options])
 
     def product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
-        result = requests.get(os.path.join(self._base_url, 'product_parts'), params={
+        result = requests.get(os.path.join(self._base_url, 'catalog/product_parts'), params={
             'product': int(product_id),
         })
         result.raise_for_status()
         return ProductPartSchema().load(result.json(), many=True)
 
     def products(self) -> Iterable[Product]:
-        result = requests.get(os.path.join(self._base_url, 'products'))
+        result = requests.get(os.path.join(self._base_url, 'catalog/products'))
         result.raise_for_status()
         return ProductSchema().load(result.json(), many=True)
 
-    def total_price(self, selected: Iterable[PartOption]) -> Money:
-        result = requests.get(os.path.join(self._base_url, 'price'), params={
+    def part_options_price(self, selected: Iterable[PartOption]) -> Money:
+        result = requests.get(os.path.join(self._base_url, 'catalog/part_options_price'), params={
             'selected_options': self._join_options(selected),
         })
         result.raise_for_status()
