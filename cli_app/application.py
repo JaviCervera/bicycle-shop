@@ -6,8 +6,8 @@ import requests
 
 from catalog.domain import Money, PartOption, Product, ProductId, \
     ProductPart, ProductPartId
-from catalog.sqlalchemy_infra import Application
-from catalog.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
+from catalog.infrastructure import Application
+from catalog.infrastructure.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from test.integration.init_part_option_repository \
     import init_part_option_repository
 from test.integration.init_product_part_repository \

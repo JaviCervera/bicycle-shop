@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 from catalog.domain import Description, Money, PartOption, PartOptionId, \
     ProductPartId
-from catalog.sqlalchemy_infra import create_models, \
+from catalog.infrastructure import create_models, \
     SqlAlchemyPartOptionRepository
 from .init_part_option_repository import init_part_option_repository
 

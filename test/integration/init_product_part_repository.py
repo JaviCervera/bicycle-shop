@@ -1,5 +1,5 @@
 from catalog.domain import Description, ProductId
-from catalog.sqlalchemy_infra import SqlAlchemyProductPartRepository
+from catalog.infrastructure import SqlAlchemyProductPartRepository
 
 
 def init_product_part_repository(repo: SqlAlchemyProductPartRepository) -> None:

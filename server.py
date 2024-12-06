@@ -8,8 +8,8 @@ import cherrypy_cors  # type: ignore
 
 from catalog.domain import PartOption, PartOptionRepository, ProductId, \
     ProductPartId
-from catalog.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
-from catalog.sqlalchemy_infra import Application
+from catalog.infrastructure import Application
+from catalog.infrastructure.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from test.integration.init_part_option_repository \
     import init_part_option_repository
 from test.integration.init_product_part_repository \

@@ -3,7 +3,7 @@ from unittest import TestCase
 from sqlalchemy import create_engine
 
 from catalog.domain import Description, Product, ProductId
-from catalog.sqlalchemy_infra import create_models, SqlAlchemyProductRepository
+from catalog.infrastructure import create_models, SqlAlchemyProductRepository
 from .init_product_reposity import init_product_repository
 
 
