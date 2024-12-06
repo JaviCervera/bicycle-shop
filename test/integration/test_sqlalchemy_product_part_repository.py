@@ -2,8 +2,9 @@ from unittest import TestCase
 
 from sqlalchemy import create_engine
 
-from catalog.domain import Description, ProductPart
-from catalog.sqlalchemy_infra import create_models, SqlAlchemyProductPartRepository
+from catalog.domain import Description, ProductId, ProductPart, ProductPartId
+from catalog.sqlalchemy_infra import create_models, \
+    SqlAlchemyProductPartRepository
 from .init_product_part_repository import init_product_part_repository
 
 
@@ -24,19 +25,34 @@ class TestSqlAlchemyProductPartRepository(TestCase):
         parts = [self._repo.get(id_) for id_ in part_ids]
         self.assertEqual(
             [
-                ProductPart(1, 1, Description('Frame type')),
-                ProductPart(2, 1, Description('Frame finish')),
-                ProductPart(3, 1, Description('Wheels')),
-                ProductPart(4, 1, Description('Rim color')),
-                ProductPart(5, 1, Description('Chain')),
+                ProductPart(
+                    ProductPartId(1),
+                    ProductId(1),
+                    Description('Frame type')),
+                ProductPart(
+                    ProductPartId(2),
+                    ProductId(1),
+                    Description('Frame finish')),
+                ProductPart(
+                    ProductPartId(3),
+                    ProductId(1),
+                    Description('Wheels')),
+                ProductPart(
+                    ProductPartId(4),
+                    ProductId(1),
+                    Description('Rim color')),
+                ProductPart(
+                    ProductPartId(5),
+                    ProductId(1),
+                    Description('Chain')),
             ],
             parts)
 
     def test_get_parts_for_product(self):
-        self.assertEqual([1, 2, 3, 4, 5], self._repo.list(1))
+        self.assertEqual([1, 2, 3, 4, 5], self._repo.list(ProductId(1)))
 
     def test_get_parts_for_invalid_product(self):
-        self.assertEqual([], self._repo.list(2))
+        self.assertEqual([], self._repo.list(ProductId(2)))
 
     def test_get_invalid_part(self):
-        self.assertIsNone(self._repo.get(6))
+        self.assertIsNone(self._repo.get(ProductPartId(6)))

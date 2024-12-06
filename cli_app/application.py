@@ -7,6 +7,7 @@ import requests
 from catalog.domain import PartOption, Product, ProductId, ProductPart, \
     ProductPartId
 from catalog.sqlalchemy_infra import Application
+from catalog.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from test.integration.init_part_option_repository \
     import init_part_option_repository
 from test.integration.init_product_part_repository \
@@ -27,7 +28,7 @@ class ApplicationProxy:
             'selected_options': self._join_options(selected),
         })
         result.raise_for_status()
-        return [PartOption(**opt) for opt in result.json()]
+        return PartOptionSchema().load(result.json(), many=True)
 
     @staticmethod
     def _join_options(options: Iterable[PartOption]) -> str:
@@ -35,15 +36,15 @@ class ApplicationProxy:
 
     def product_parts(self, product_id: ProductId) -> Iterable[ProductPart]:
         result = requests.get(os.path.join(self._base_url, 'product_parts'), params={
-            'product': product_id,
+            'product': int(product_id),
         })
         result.raise_for_status()
-        return [ProductPart(**part) for part in result.json()]
+        return ProductPartSchema().load(result.json(), many=True)
 
     def products(self) -> Iterable[Product]:
         result = requests.get(os.path.join(self._base_url, 'products'))
         result.raise_for_status()
-        return [Product(**product) for product in result.json()]
+        return ProductSchema().load(result.json(), many=True)
 
     def total_price(self, selected: Iterable[PartOption]) -> float:
         result = requests.get(os.path.join(self._base_url, 'price'), params={

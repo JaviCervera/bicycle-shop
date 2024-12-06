@@ -22,16 +22,16 @@ class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepos
             product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
         stmt = select(ProductPartModel.id)
         if product_id:
-            stmt = stmt.where(ProductPartModel.product_id == product_id)
+            stmt = stmt.where(ProductPartModel.product_id == int(product_id))
         return [row.id for row in self._session.execute(stmt).all()]
 
     def get(self, id_: ProductPartId) -> Optional[ProductPart]:
         result = self._session.scalars(
             select(ProductPartModel) \
-                .where(ProductPartModel.id == id_)).first()
+                .where(ProductPartModel.id == int(id_))).first()
         return ProductPart(
-            id=result.id,
-            product_id=result.product_id,
+            id=ProductPartId(result.id),
+            product_id=ProductId(result.product_id),
             description=Description(result.description)) if result else None
 
     def create(
@@ -39,11 +39,11 @@ class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepos
             product_id: ProductId,
             description: Description) -> ProductPart:
         model = ProductPartModel(
-            product_id=product_id,
+            product_id=int(product_id),
             description=str(description))
         self._session.add(model)
         self._session.flush()
         return ProductPart(
-            id=model.id,
-            product_id=model.product_id,
+            id=ProductPartId(model.id),
+            product_id=ProductId(model.product_id),
             description=Description(model.description))

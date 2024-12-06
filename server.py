@@ -6,7 +6,9 @@ from typing import Iterable
 import cherrypy  # type: ignore
 import cherrypy_cors  # type: ignore
 
-from catalog.domain import PartOption, PartOptionRepository
+from catalog.domain import PartOption, PartOptionRepository, ProductId, \
+    ProductPartId
+from catalog.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from catalog.sqlalchemy_infra import Application
 from test.integration.init_part_option_repository \
     import init_part_option_repository
@@ -15,26 +17,25 @@ from test.integration.init_product_part_repository \
 from test.integration.init_product_reposity import init_product_repository
 
 
-
 class Server:
     @cherrypy.expose
     def products(self) -> str:
         with self.app() as app:
-            return json.dumps([product.__dict__ for product in app.products()])
+            return ProductSchema().dumps(app.products(), many=True)
 
     @cherrypy.expose
     def product_parts(self, product: str) -> str:
         with self.app() as app:
-            return json.dumps([part.__dict__
-                               for part in app.product_parts(int(product))])
+            parts = app.product_parts(ProductId(int(product)))
+            return ProductPartSchema().dumps(parts, many=True)
 
     @cherrypy.expose
     def part_options(self, product_part: str, selected_options='') -> str:
         with self.app() as app:
-            return json.dumps(
-                [opt.__dict__ for opt in app.part_options(
-                    int(product_part),
-                    self.parse_options(selected_options, app.option_repo))])
+            options = app.part_options(
+                ProductPartId(int(product_part)),
+                self.parse_options(selected_options, app.option_repo))
+            return PartOptionSchema().dumps(options, many=True)
 
     @cherrypy.expose
     def price(self, selected_options: str) -> str:

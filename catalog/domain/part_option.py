@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 
 from .description import Description
+from .model_id import ModelId
 from .product_part import ProductPartId
-from .validations import validate_id, validate_type
+from .validations import validate_type
 
-PartOptionId = int
+class PartOptionId(ModelId):
+    pass
 
 
 @dataclass(frozen=True)
@@ -16,7 +18,5 @@ class PartOption:
     in_stock: bool
 
     def __post_init__(self):
-        validate_id(self.id, 'PartOption.id')
-        validate_id(self.part_id, 'PartOption.part_id')
         validate_type(self.price, (int, float), 'PartOption.price')
         validate_type(self.in_stock, bool, 'PartOption.in_stock')

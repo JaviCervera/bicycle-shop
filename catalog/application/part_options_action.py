@@ -2,7 +2,8 @@ from itertools import chain
 from logging import Logger
 from typing import Iterable
 
-from catalog.domain import PartOption, PartOptionRepository, ProductPartId
+from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
+    ProductPartId
 from catalog.domain.validations import validate_iterable, validate_type
 
 
@@ -39,7 +40,7 @@ class PartOptionsAction:
                 if opt not in all_incompatibilities]
 
     def _all_incompatibilities(
-            self, selected_options: Iterable[PartOption]) -> Iterable[int]:
+            self, selected_options: Iterable[PartOption]) -> Iterable[PartOptionId]:
         incomps = [self._repo.list_incompatibilities(opt.id)
                    for opt in selected_options]
         flattened_set = set(chain.from_iterable(incomps))

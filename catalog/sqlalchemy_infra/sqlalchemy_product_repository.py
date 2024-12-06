@@ -16,18 +16,18 @@ class ProductModel(SqlAlchemyBase):
 
 class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
     def list(self) -> Iterable[ProductId]:
-        return [row.id
+        return [ProductId(row.id)
                 for row in self._session.execute(select(ProductModel.id)).all()]
 
     def get(self, id_: ProductId) -> Optional[Product]:
         result = self._session.scalars(
             select(ProductModel) \
-                .where(ProductModel.id == id_)).first()
-        return Product(result.id, Description(result.description)) \
+                .where(ProductModel.id == int(id_))).first()
+        return Product(ProductId(result.id), Description(result.description)) \
             if result else None
 
     def create(self, description: Description) -> Product:
-        model = ProductModel(id=None, description=str(description))
+        model = ProductModel(description=str(description))
         self._session.add(model)
         self._session.flush()
-        return Product(model.id, Description(model.description))
+        return Product(ProductId(model.id), Description(model.description))

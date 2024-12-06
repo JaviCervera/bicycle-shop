@@ -37,16 +37,17 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             part_id: Optional[ProductPartId] = None) -> Iterable[PartOptionId]:
         stmt = select(PartOptionModel.id)
         if part_id:
-            stmt = stmt.where(PartOptionModel.part_id == part_id)
-        return [row.id for row in self._session.execute(stmt).all()]
+            stmt = stmt.where(PartOptionModel.part_id == int(part_id))
+        return [PartOptionId(row.id)
+                for row in self._session.execute(stmt).all()]
 
     def get(self, id_: PartOptionId) -> Optional[PartOption]:
         result = self._session.scalars(
             select(PartOptionModel) \
-                .where(PartOptionModel.id == id_)).first()
+                .where(PartOptionModel.id == int(id_))).first()
         return PartOption(
-            id=result.id,
-            part_id=result.part_id,
+            id=PartOptionId(result.id),
+            part_id=ProductPartId(result.part_id),
             description=Description(result.description),
             price=result.price,
             in_stock=result.in_stock) if result else None
@@ -58,15 +59,15 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             price: float,
             in_stock: bool) -> PartOption:
         model = PartOptionModel(
-            part_id=part_id,
+            part_id=int(part_id),
             description=str(description),
             price=price,
             in_stock=in_stock)
         self._session.add(model)
         self._session.flush()
         return PartOption(
-            id=model.id,
-            part_id=model.part_id,
+            id=PartOptionId(model.id),
+            part_id=ProductPartId(model.part_id),
             description=Description(model.description),
             price=model.price,
             in_stock=model.in_stock)
@@ -75,28 +76,28 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
         result_a = self._session.execute(
             select(OptionIncompatibilityModel.option_a) \
-                .where(OptionIncompatibilityModel.option_b == id_)).all()
+                .where(OptionIncompatibilityModel.option_b == int(id_))).all()
         result_b = self._session.execute(
             select(OptionIncompatibilityModel.option_b) \
-                .where(OptionIncompatibilityModel.option_a == id_)).all()
-        return set([row.option_a for row in result_a]
-                   + [row.option_b for row in result_b])
+                .where(OptionIncompatibilityModel.option_a == int(id_))).all()
+        return set([PartOptionId(row.option_a) for row in result_a]
+                   + [PartOptionId(row.option_b) for row in result_b])
 
     def create_incompatibility(
             self,
             option_a: PartOptionId,
             option_b: PartOptionId) -> None:
         self._session.add(OptionIncompatibilityModel(
-            option_a=min(option_a, option_b),
-            option_b=max(option_a, option_b)))
+            option_a=min(int(option_a), int(option_b)),
+            option_b=max(int(option_a), int(option_b))))
         self._session.flush()
 
     def list_depending_options(
             self, part_id: ProductPartId) -> Iterable[PartOptionId]:
         result = self._session.execute(
             select(OptionPriceModifierModel.depending_option_id) \
-                .where(OptionPriceModifierModel.part_id == part_id)).all()
-        return [row.depending_option_id for row in result]
+                .where(OptionPriceModifierModel.part_id == int(part_id))).all()
+        return [PartOptionId(row.depending_option_id) for row in result]
 
     def get_depending_option_price_coef(
             self,
@@ -104,9 +105,9 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             depending_option_id: PartOptionId) -> float:
         result = self._session.scalars(
             select(OptionPriceModifierModel.coef) \
-                .where(OptionPriceModifierModel.part_id == part_id \
+                .where(OptionPriceModifierModel.part_id == int(part_id) \
                        and OptionPriceModifierModel.depending_option_id \
-                       == depending_option_id)).first()
+                       == int(depending_option_id))).first()
         return result or 1.0
 
     def create_depending_option(
@@ -115,8 +116,8 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             depending_option_id: PartOptionId,
             coef: float) -> None:
         model = OptionPriceModifierModel(
-            part_id=part_id,
-            depending_option_id=depending_option_id,
+            part_id=int(part_id),
+            depending_option_id=int(depending_option_id),
             coef=coef)
         self._session.add(model)
         self._session.flush()

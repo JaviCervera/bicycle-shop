@@ -6,19 +6,84 @@ from catalog.domain import Description, PartOption, PartOptionId, \
 
 class MockPartOptionRepository(PartOptionRepository):
     _options = [
-        PartOption(1, 1, Description('Full-suspension'), 130, True),
-        PartOption(2, 1, Description('Diamond'), 100, True),
-        PartOption(3, 1, Description('Step-through'), 90, True),
-        PartOption(4, 2, Description('Matte'), 50, True),
-        PartOption(5, 2, Description('Shiny'), 30, True),
-        PartOption(6, 3, Description('Road wheels'), 80, True),
-        PartOption(7, 3, Description('Mountain wheels'), 90, True),
-        PartOption(8, 3, Description('Fat bike wheels'), 100, True),
-        PartOption(9, 4, Description('Red'), 20, True),
-        PartOption(10, 4, Description('Black'), 25, True),
-        PartOption(11, 4, Description('Blue'), 20, True),
-        PartOption(12, 5, Description('Single-speed chain'), 43, True),
-        PartOption(13, 5, Description('8-speed chain'), 90, False),
+        PartOption(
+            PartOptionId(1),
+            ProductPartId(1),
+            Description('Full-suspension'),
+            130,
+            True),
+        PartOption(
+            PartOptionId(2),
+            ProductPartId(1),
+            Description('Diamond'),
+            100,
+            True),
+        PartOption(
+            PartOptionId(3),
+            ProductPartId(1),
+            Description('Step-through'),
+            90,
+            True),
+        PartOption(
+            PartOptionId(4),
+            ProductPartId(2),
+            Description('Matte'),
+            50,
+            True),
+        PartOption(
+            PartOptionId(5),
+            ProductPartId(2),
+            Description('Shiny'),
+            30,
+            True),
+        PartOption(
+            PartOptionId(6),
+            ProductPartId(3),
+            Description('Road wheels'),
+            80,
+            True),
+        PartOption(
+            PartOptionId(7),
+            ProductPartId(3),
+            Description('Mountain wheels'),
+            90,
+            True),
+        PartOption(
+            PartOptionId(8),
+            ProductPartId(3),
+            Description('Fat bike wheels'),
+            100,
+            True),
+        PartOption(
+            PartOptionId(9),
+            ProductPartId(4),
+            Description('Red'),
+            20,
+            True),
+        PartOption(
+            PartOptionId(10),
+            ProductPartId(4),
+            Description('Black'),
+            25,
+            True),
+        PartOption(
+            PartOptionId(11),
+            ProductPartId(4),
+            Description('Blue'),
+            20,
+            True),
+        PartOption(
+            PartOptionId(12),
+            ProductPartId(5),
+            Description('Single-speed chain'),
+            43,
+            True),
+        PartOption(
+            PartOptionId(13),
+            ProductPartId(5),
+            Description('8-speed chain'),
+            90,
+            False),
     ]
 
     def list(
@@ -30,8 +95,8 @@ class MockPartOptionRepository(PartOptionRepository):
             return [opt.id for opt in self._options if opt.part_id == part_id]
 
     def get(self, id_: PartOptionId) -> Optional[PartOption]:
-        if id_ in range(1, 14):
-            return self._options[id_ - 1]
+        if int(id_) in range(1, 14):
+            return self._options[int(id_) - 1]
         else:
             return None
 
@@ -46,11 +111,11 @@ class MockPartOptionRepository(PartOptionRepository):
     def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
         incompatibilities = {
-            2: [7],
-            3: [7],
-            7: [2, 3],
-            8: [9],
-            9: [8],
+            PartOptionId(2): [PartOptionId(7)],
+            PartOptionId(3): [PartOptionId(7)],
+            PartOptionId(7): [PartOptionId(2), PartOptionId(3)],
+            PartOptionId(8): [PartOptionId(9)],
+            PartOptionId(9): [PartOptionId(8)],
         }
         return incompatibilities.get(id_, [])
 
@@ -63,7 +128,7 @@ class MockPartOptionRepository(PartOptionRepository):
     def list_depending_options(
             self, part_id: ProductPartId) -> Iterable[PartOptionId]:
         depending_opts = {
-            2: [2]
+            ProductPartId(2): [PartOptionId(2)]
         }
         return depending_opts.get(part_id, [])
 
@@ -72,7 +137,7 @@ class MockPartOptionRepository(PartOptionRepository):
             part_id: ProductPartId,
             depending_option_id: PartOptionId) -> float:
         coefs = {
-            (2, 2): 0.7
+            (ProductPartId(2), PartOptionId(2)): 0.7
         }
         return coefs.get((part_id, depending_option_id), 1)
 

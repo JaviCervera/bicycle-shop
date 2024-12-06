@@ -1,4 +1,5 @@
 cherrypy==18.10.0
 cherrypy-cors==1.7.0
+marshmallow==3.23.1
 requests==2.32.3
 SQLAlchemy==2.0.36

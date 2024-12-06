@@ -9,20 +9,30 @@ class MockProductPartRepository(ProductPartRepository):
             self,
             product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
         if product_id in (None, 1):
-            return [1, 2, 3, 4, 5]
+            return [
+                ProductPartId(1),
+                ProductPartId(2),
+                ProductPartId(3),
+                ProductPartId(4),
+                ProductPartId(5)]
         else:
             return []
 
     def get(self, id_: ProductPartId) -> Optional[ProductPart]:
         parts = [
-            ProductPart(1, 1, Description('Frame type')),
-            ProductPart(2, 1, Description('Frame finish')),
-            ProductPart(3, 1, Description('Wheels')),
-            ProductPart(4, 1, Description('Rim color')),
-            ProductPart(5, 1, Description('Chain')),
+            ProductPart(
+                ProductPartId(1), ProductId(1), Description('Frame type')),
+            ProductPart(
+                ProductPartId(2), ProductId(1), Description('Frame finish')),
+            ProductPart(
+                ProductPartId(3), ProductId(1), Description('Wheels')),
+            ProductPart(
+                ProductPartId(4), ProductId(1), Description('Rim color')),
+            ProductPart(
+                ProductPartId(5), ProductId(1), Description('Chain')),
         ]
-        if id_ in range(1, len(parts) + 1):
-            return parts[id_ - 1]
+        if int(id_) in range(1, len(parts) + 1):
+            return parts[int(id_) - 1]
         else:
             return None
 
