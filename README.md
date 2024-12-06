@@ -279,4 +279,5 @@ components:
 
 - Comment code.
 - Update README.
+- 100% test coverage.
 - CloudFormation template?

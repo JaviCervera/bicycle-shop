@@ -10,7 +10,7 @@ from .sqlalchemy_product_part_repository import SqlAlchemyProductPartRepository
 from .sqlalchemy_product_repository import SqlAlchemyProductRepository
 
 
-class Application:
+class Catalog:
     def __init__(self, url: str, echo=False):
         engine = create_engine(url, echo=echo)
         create_models(engine)

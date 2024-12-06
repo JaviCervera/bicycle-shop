@@ -1,10 +1,10 @@
-from .application import ApplicationProxy, create_app
+from .catalog import CatalogProxy, create_catalog
 from .cli import display_order_summary, print_welcome_message, \
     select_options, select_product, server_url
 
 __all__ = [
-    'ApplicationProxy',
-    'create_app',
+    'CatalogProxy',
+    'create_catalog',
     'display_order_summary',
     'print_welcome_message',
     'select_options',

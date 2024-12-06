@@ -5,7 +5,7 @@ import requests
 
 from catalog.domain import Money, PartOption, Product, ProductId, \
     ProductPart, ProductPartId
-from catalog.infrastructure import Application
+from catalog.infrastructure import Catalog
 from catalog.infrastructure.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from test.integration.init_part_option_repository \
     import init_part_option_repository
@@ -14,7 +14,7 @@ from test.integration.init_product_part_repository \
 from test.integration.init_product_reposity import init_product_repository
 
 
-class ApplicationProxy:
+class CatalogProxy:
     def __init__(self, url: str) -> None:
         self._base_url = url
 
@@ -59,12 +59,12 @@ class ApplicationProxy:
         pass
 
 
-def create_app(
-        url: Optional[str] = None) -> Union[Application, ApplicationProxy]:
+def create_catalog(
+        url: Optional[str] = None) -> Union[Catalog, CatalogProxy]:
     if url:
-        return ApplicationProxy(url)
+        return CatalogProxy(url)
     else:
-        app = Application('sqlite+pysqlite:///:memory:')
+        app = Catalog('sqlite+pysqlite:///:memory:')
         init_product_repository(app.product_repo)
         init_product_part_repository(app.part_repo)
         init_part_option_repository(app.option_repo)
