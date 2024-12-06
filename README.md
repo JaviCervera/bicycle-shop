@@ -83,60 +83,51 @@ These kinds of variations can always happen, and they might depend on any of the
 
 ## Data model
 
+Specified in [DBML](https://dbml.dbdiagram.io/home) using [dbdiagram.io](https://dbdiagram.io).
+
+![Tables](doc/data_model.png)
+
 ```
-# 1, Bicycles
-products:
-- id *
-- description
+Table products {
+  id integer [primary key]
+  description string
+  note: 'The list of products in the catalog'
+}
 
-# 1, 1, Frame type
-# 2, 1, Frame finish
-# 3, 1, Wheels
-# 4, 1, Rim color
-# 5, 1, Chain
-product_parts:
-- id *
-- product_id
-- description
+Table product_parts {
+  id integer [primary key]
+  product_id integer
+  note: 'The parts that conform each product'
+}
 
-# 1, 1, Full-suspension, 130, True
-# 2, 1, Diamond, 100, True
-# 3, 1, Step-through, 90, True
-# 4, 2, Matte, 50, True
-# 5, 2, Shiny, 30, True
-# 6, 3, Road wheels, 80, True
-# 7, 3, Mountain wheels, 90, True
-# 8, 3, Fat bike wheels, 100, True
-# 9, 4, Red, 20, True
-# 10, 4, Black, 25, True
-# 11, 4, Blue, 20, True
-# 12, 5, Single-speed chain, 43, True
-# 13, 5, 8-speed chain, 90, False
-part_options:
-- id *
-- part_id
-- description
-- price
-- in_stock
+Table part_options {
+  id integer [primary key]
+  part_id integer
+  description string
+  price float
+  in_stock bool
+  note: 'The available options for each part, with price and availability'
+}
 
-# 2, 7
-# 3, 7
-# 8, 9
-# Incompatibilies must be handled both ways, this is, if
-# option_a is incompatible with option_b, then option_b
-# is incompatible with option_a
-option_incompatibilities:
-- option_a *
-- option_b *
+Table option_incompatibilities {
+  option_a integer [primary key]
+  option_b integer [primary key]
+  note: 'Indicates incompatibility between two options'
+}
 
-# 2, 2, 0.7
-# Any items in part_id will get their price modified by coef if
-# depending_option_id is selected (which itself might belong to a different
-# part_id)
-option_price_modifiers:
-- part_id *
-- depending_option_id *
-- coef
+Table option_price_modifiers {
+  part_id integer [primary key]
+  depending_option_id integer [primary key]
+  coef float
+  note: 'Indicates that the price of all options in a part will be affected by a given coefficient if an option is selected'
+}
+
+Ref: product_parts.product_id > products.id
+Ref: part_options.part_id > product_parts.id
+Ref: option_incompatibilities.option_a > part_options.id
+Ref: option_incompatibilities.option_b > part_options.id
+Ref: option_price_modifiers.part_id > product_parts.id
+Ref: option_price_modifiers.depending_option_id > part_options.id
 ```
 
 ## User Actions (OpenAPI specification)
@@ -286,7 +277,6 @@ components:
 
 ## TODO:
 
-- Comment methods.
-- Data model diagram.
-- CloudFormation template?
+- Comment code.
 - Update README.
+- CloudFormation template?
