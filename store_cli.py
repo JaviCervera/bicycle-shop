@@ -1,4 +1,3 @@
-import logging
 from argparse import ArgumentParser
 from typing import Callable, Iterable, List, Optional, Sequence
 
@@ -11,6 +10,8 @@ GetPartOptionsFunc = \
 
 
 def main() -> None:
+    # Uncomment the following lines to enable logging to stdout
+    # import logging
     # logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
     url = server_url()
     print_welcome_message(url)

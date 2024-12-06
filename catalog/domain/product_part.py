@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from .description import Description
 from .product import ProductId
-from .validations import validate_id, validate_type
+from .validations import validate_id
 
 ProductPartId = int
 
