@@ -27,4 +27,4 @@ class TestSqlAlchemyProductRepository(TestCase):
             products)
 
     def test_get_invalid_product(self):
-        self.assertIsNone(self._repo.get(2))
+        self.assertIsNone(self._repo.get(ProductId(2)))

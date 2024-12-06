@@ -1,5 +1,5 @@
-from catalog.domain import Description, PartOption, PartOptionId, Product, \
-    ProductId, ProductPart, ProductPartId
+from catalog.domain import Description, Money, PartOption, PartOptionId, \
+    Product, ProductId, ProductPart, ProductPartId
 
 from marshmallow import Schema, fields, post_load
 
@@ -38,5 +38,5 @@ class PartOptionSchema(Schema):
             id=PartOptionId(data['id']),
             part_id=ProductPartId(data['part_id']),
             description=Description(data['description']),
-            price=data['price'],
+            price=Money(data['price']),
             in_stock=data['in_stock'])

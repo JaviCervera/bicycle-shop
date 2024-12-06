@@ -2,7 +2,7 @@ import logging
 from unittest import TestCase
 
 from catalog.application import TotalPriceAction
-from catalog.domain import PartOption
+from catalog.domain import Money, PartOption
 from .mock_part_option_repository import MockPartOptionRepository
 
 
@@ -13,7 +13,7 @@ class TestTotalPriceAction(TestCase):
 
     def test_prices_witout_modifiers(self):
         self.assertEqual(
-            303,
+            Money(303),
             self.total_price([
                 self.find_option('Full-suspension'),
                 self.find_option('Shiny'),
@@ -26,7 +26,7 @@ class TestTotalPriceAction(TestCase):
     def test_prices_with_modifiers(self):
         # Without the modifier, it would be 293
         self.assertEqual(
-            278,
+            Money(278),
             self.total_price([
                 self.find_option('Diamond'),
                 self.find_option('Matte'),

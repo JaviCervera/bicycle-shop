@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from sqlalchemy import  select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import Description, PartOption, PartOptionId, \
+from catalog.domain import Description, Money, PartOption, PartOptionId, \
     PartOptionRepository, ProductPartId
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
@@ -49,7 +49,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             id=PartOptionId(result.id),
             part_id=ProductPartId(result.part_id),
             description=Description(result.description),
-            price=result.price,
+            price=Money(result.price),
             in_stock=result.in_stock) if result else None
 
     def create(
@@ -61,7 +61,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
         model = PartOptionModel(
             part_id=int(part_id),
             description=str(description),
-            price=price,
+            price=float(price),
             in_stock=in_stock)
         self._session.add(model)
         self._session.flush()
@@ -69,7 +69,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             id=PartOptionId(model.id),
             part_id=ProductPartId(model.part_id),
             description=Description(model.description),
-            price=model.price,
+            price=Money(model.price),
             in_stock=model.in_stock)
 
     def list_incompatibilities(

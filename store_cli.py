@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
 from typing import Callable, Iterable, List, Optional, Sequence
 
-from catalog.domain import Description, PartOption, Product, ProductPart, \
-    ProductPartId
+from catalog.domain import Description, Money, PartOption, Product, \
+    ProductPart, ProductPartId
 from cli_app import create_app
 
 GetPartOptionsFunc = \
@@ -62,7 +62,7 @@ def select_options(
 
 def select_elem(
         names: Sequence[Description],
-        prices: Sequence[float], type_: str) -> int:
+        prices: Sequence[Money], type_: str) -> int:
     print(f'Select {type_}:')
     for i in range(len(names)):
         price_str = f' - {prices[i]} EUR' if len(prices) > i else ''
@@ -81,7 +81,7 @@ def display_order_summary(
         product: Product,
         parts: Iterable[ProductPart],
         selected: Iterable[PartOption],
-        price: float) -> None:
+        price: Money) -> None:
     print()
     print(f'Your {product.description} order:')
     for opt in selected:

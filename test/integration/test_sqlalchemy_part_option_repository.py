@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from sqlalchemy import create_engine
 
-from catalog.domain import Description, PartOption, PartOptionId, ProductPartId
+from catalog.domain import Description, Money, PartOption, PartOptionId, \
+    ProductPartId
 from catalog.sqlalchemy_infra import create_models, \
     SqlAlchemyPartOptionRepository
 from .init_part_option_repository import init_part_option_repository
@@ -45,79 +46,79 @@ class TestSqlAlchemyPartOptionRepository(TestCase):
                     PartOptionId(1),
                     ProductPartId(1),
                     Description('Full-suspension'),
-                    130,
+                    Money(130),
                     True),
                 PartOption(
                     PartOptionId(2),
                     ProductPartId(1),
                     Description('Diamond'),
-                    100,
+                    Money(100),
                     True),
                 PartOption(
                     PartOptionId(3),
                     ProductPartId(1),
                     Description('Step-through'),
-                    90,
+                    Money(90),
                     True),
                 PartOption(
                     PartOptionId(4),
                     ProductPartId(2),
                     Description('Matte'),
-                    50,
+                    Money(50),
                     True),
                 PartOption(
                     PartOptionId(5),
                     ProductPartId(2),
                     Description('Shiny'),
-                    30,
+                    Money(30),
                     True),
                 PartOption(
                     PartOptionId(6),
                     ProductPartId(3),
                     Description('Road wheels'),
-                    80,
+                    Money(80),
                     True),
                 PartOption(
                     PartOptionId(7),
                     ProductPartId(3),
                     Description('Mountain wheels'),
-                    90,
+                    Money(90),
                     True),
                 PartOption(
                     PartOptionId(8),
                     ProductPartId(3),
                     Description('Fat bike wheels'),
-                    100,
+                    Money(100),
                     True),
                 PartOption(
                     PartOptionId(9),
                     ProductPartId(4),
                     Description('Red'),
-                    20,
+                    Money(20),
                     True),
                 PartOption(
                     PartOptionId(10),
                     ProductPartId(4),
                     Description('Black'),
-                    25,
+                    Money(25),
                     True),
                 PartOption(
                     PartOptionId(11),
                     ProductPartId(4),
                     Description('Blue'),
-                    20,
+                    Money(20),
                     True),
                 PartOption(
                     PartOptionId(12),
                     ProductPartId(5),
                     Description('Single-speed chain'),
-                    43,
+                    Money(43),
                     True),
                 PartOption(
                     PartOptionId(13),
                     ProductPartId(5),
                     Description('8-speed chain'),
-                    90,
+                    Money(90),
                     False),
             ],
             options)

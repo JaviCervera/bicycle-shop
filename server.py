@@ -42,7 +42,7 @@ class Server:
         with self.app() as app:
             selected = self.parse_options(selected_options, app.option_repo)
             return json.dumps({
-                'price': app.total_price(selected)
+                'price': float(app.total_price(selected))
             })
 
     @staticmethod

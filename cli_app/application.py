@@ -4,8 +4,8 @@ from typing import Iterable, Optional, Self, Union
 
 import requests
 
-from catalog.domain import PartOption, Product, ProductId, ProductPart, \
-    ProductPartId
+from catalog.domain import Money, PartOption, Product, ProductId, \
+    ProductPart, ProductPartId
 from catalog.sqlalchemy_infra import Application
 from catalog.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
 from test.integration.init_part_option_repository \
@@ -46,12 +46,12 @@ class ApplicationProxy:
         result.raise_for_status()
         return ProductSchema().load(result.json(), many=True)
 
-    def total_price(self, selected: Iterable[PartOption]) -> float:
+    def total_price(self, selected: Iterable[PartOption]) -> Money:
         result = requests.get(os.path.join(self._base_url, 'price'), params={
             'selected_options': self._join_options(selected),
         })
         result.raise_for_status()
-        return float(result.json()['price'])
+        return Money(float(result.json()['price']))
 
     def __enter__(self) -> Self:
         return self

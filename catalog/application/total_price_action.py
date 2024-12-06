@@ -1,8 +1,10 @@
+from functools import reduce
 from logging import Logger
 from math import prod
 from typing import Iterable
 
-from catalog.domain import PartOption, PartOptionId, PartOptionRepository
+from catalog.domain import Money, PartOption, PartOptionId, \
+    PartOptionRepository
 
 
 class TotalPriceAction:
@@ -10,15 +12,18 @@ class TotalPriceAction:
         self._repo = repo
         self._logger = logger
 
-    def __call__(self, selected: Iterable[PartOption]) -> float:
+    def __call__(self, selected: Iterable[PartOption]) -> Money:
         self._logger.info(f'TotalPriceAction({selected}) called')
         option_ids = [opt.id for opt in selected]
-        total = sum([self._calc_price(opt, option_ids) for opt in selected])
+        total = reduce(
+            lambda money, opt: money + self._calc_price(opt, option_ids),
+            selected,
+            Money(0))
         self._logger.info(f'TotalPriceAction({selected} result: {total})')
         return total
 
     def _calc_price(
-            self, option: PartOption, used_option_ids: Iterable[PartOptionId]) -> float:
+            self, option: PartOption, used_option_ids: Iterable[PartOptionId]) -> Money:
         depending_opts = self._repo.list_depending_options(option.part_id)
         coefs = [self._repo.get_depending_option_price_coef(option.part_id, opt)
                  for opt in depending_opts if opt in used_option_ids]
