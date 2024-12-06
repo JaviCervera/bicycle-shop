@@ -1,7 +1,7 @@
 from typing import Iterable, Optional
 
-from catalog.domain import ProductId, ProductPart, ProductPartId, \
-    ProductPartRepository
+from catalog.domain import Description, ProductId, ProductPart, \
+    ProductPartId, ProductPartRepository
 
 
 class MockProductPartRepository(ProductPartRepository):
@@ -15,16 +15,19 @@ class MockProductPartRepository(ProductPartRepository):
 
     def get(self, id_: ProductPartId) -> Optional[ProductPart]:
         parts = [
-            ProductPart(1, 1, 'Frame type'),
-            ProductPart(2, 1, 'Frame finish'),
-            ProductPart(3, 1, 'Wheels'),
-            ProductPart(4, 1, 'Rim color'),
-            ProductPart(5, 1, 'Chain'),
+            ProductPart(1, 1, Description('Frame type')),
+            ProductPart(2, 1, Description('Frame finish')),
+            ProductPart(3, 1, Description('Wheels')),
+            ProductPart(4, 1, Description('Rim color')),
+            ProductPart(5, 1, Description('Chain')),
         ]
         if id_ in range(1, len(parts) + 1):
             return parts[id_ - 1]
         else:
             return None
 
-    def create(self, product_id: ProductId, description: str) -> ProductPart:
+    def create(
+            self,
+            product_id: ProductId,
+            description: Description) -> ProductPart:
         raise NotImplementedError()

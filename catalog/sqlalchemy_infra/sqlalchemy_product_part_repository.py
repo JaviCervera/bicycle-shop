@@ -3,8 +3,8 @@ from typing import Iterable, Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import ProductId, ProductPart, ProductPartId, \
-    ProductPartRepository
+from catalog.domain import Description, ProductId, ProductPart, \
+    ProductPartId, ProductPartRepository
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
@@ -32,13 +32,18 @@ class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepos
         return ProductPart(
             id=result.id,
             product_id=result.product_id,
-            description=result.description) if result else None
+            description=Description(result.description)) if result else None
 
-    def create(self, product_id: ProductId, description: str) -> ProductPart:
-        model = ProductPartModel(product_id=product_id, description=description)
+    def create(
+            self,
+            product_id: ProductId,
+            description: Description) -> ProductPart:
+        model = ProductPartModel(
+            product_id=product_id,
+            description=str(description))
         self._session.add(model)
         self._session.flush()
         return ProductPart(
             id=model.id,
             product_id=model.product_id,
-            description=model.description)
+            description=Description(model.description))

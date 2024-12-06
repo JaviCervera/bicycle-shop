@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from sqlalchemy import create_engine
 
-from catalog.domain import ProductPart
+from catalog.domain import Description, ProductPart
 from catalog.sqlalchemy_infra import create_models, SqlAlchemyProductPartRepository
 from .init_product_part_repository import init_product_part_repository
 
@@ -24,11 +24,11 @@ class TestSqlAlchemyProductPartRepository(TestCase):
         parts = [self._repo.get(id_) for id_ in part_ids]
         self.assertEqual(
             [
-                ProductPart(1, 1, 'Frame type'),
-                ProductPart(2, 1, 'Frame finish'),
-                ProductPart(3, 1, 'Wheels'),
-                ProductPart(4, 1, 'Rim color'),
-                ProductPart(5, 1, 'Chain'),
+                ProductPart(1, 1, Description('Frame type')),
+                ProductPart(2, 1, Description('Frame finish')),
+                ProductPart(3, 1, Description('Wheels')),
+                ProductPart(4, 1, Description('Rim color')),
+                ProductPart(5, 1, Description('Chain')),
             ],
             parts)
 

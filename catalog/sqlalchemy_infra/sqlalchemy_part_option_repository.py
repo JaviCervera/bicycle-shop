@@ -3,8 +3,8 @@ from typing import Iterable, Optional
 from sqlalchemy import  select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
-    ProductPartId
+from catalog.domain import Description, PartOption, PartOptionId, \
+    PartOptionRepository, ProductPartId
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
@@ -47,18 +47,19 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
         return PartOption(
             id=result.id,
             part_id=result.part_id,
-            description=result.description,
+            description=Description(result.description),
             price=result.price,
             in_stock=result.in_stock) if result else None
 
     def create(
-            self, part_id: ProductPartId,
-            description: str,
+            self,
+            part_id: ProductPartId,
+            description: Description,
             price: float,
             in_stock: bool) -> PartOption:
         model = PartOptionModel(
             part_id=part_id,
-            description=description,
+            description=str(description),
             price=price,
             in_stock=in_stock)
         self._session.add(model)
@@ -66,7 +67,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
         return PartOption(
             id=model.id,
             part_id=model.part_id,
-            description=model.description,
+            description=Description(model.description),
             price=model.price,
             in_stock=model.in_stock)
 

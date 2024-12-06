@@ -38,4 +38,4 @@ class TestTotalPriceAction(TestCase):
 
     def find_option(self, description: str) -> PartOption:
         return [self.repo.get(elem) for elem in self.repo.list()
-                if self.repo.get(elem).description == description][0]
+                if str(self.repo.get(elem).description) == description][0]

@@ -1,24 +1,24 @@
 from typing import Iterable, Optional
 
-from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
-    ProductPartId
+from catalog.domain import Description, PartOption, PartOptionId, \
+    PartOptionRepository, ProductPartId
 
 
 class MockPartOptionRepository(PartOptionRepository):
     _options = [
-        PartOption(1, 1, 'Full-suspension', 130, True),
-        PartOption(2, 1, 'Diamond', 100, True),
-        PartOption(3, 1, 'Step-through', 90, True),
-        PartOption(4, 2, 'Matte', 50, True),
-        PartOption(5, 2, 'Shiny', 30, True),
-        PartOption(6, 3, 'Road wheels', 80, True),
-        PartOption(7, 3, 'Mountain wheels', 90, True),
-        PartOption(8, 3, 'Fat bike wheels', 100, True),
-        PartOption(9, 4, 'Red', 20, True),
-        PartOption(10, 4, 'Black', 25, True),
-        PartOption(11, 4, 'Blue', 20, True),
-        PartOption(12, 5, 'Single-speed chain', 43, True),
-        PartOption(13, 5, '8-speed chain', 90, False),
+        PartOption(1, 1, Description('Full-suspension'), 130, True),
+        PartOption(2, 1, Description('Diamond'), 100, True),
+        PartOption(3, 1, Description('Step-through'), 90, True),
+        PartOption(4, 2, Description('Matte'), 50, True),
+        PartOption(5, 2, Description('Shiny'), 30, True),
+        PartOption(6, 3, Description('Road wheels'), 80, True),
+        PartOption(7, 3, Description('Mountain wheels'), 90, True),
+        PartOption(8, 3, Description('Fat bike wheels'), 100, True),
+        PartOption(9, 4, Description('Red'), 20, True),
+        PartOption(10, 4, Description('Black'), 25, True),
+        PartOption(11, 4, Description('Blue'), 20, True),
+        PartOption(12, 5, Description('Single-speed chain'), 43, True),
+        PartOption(13, 5, Description('8-speed chain'), 90, False),
     ]
 
     def list(
@@ -38,7 +38,7 @@ class MockPartOptionRepository(PartOptionRepository):
     def create(
             self,
             part_id: ProductPartId,
-            description: str,
+            description: Description,
             price: float,
             in_stock: bool) -> PartOption:
         raise NotImplementedError()

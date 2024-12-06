@@ -71,4 +71,4 @@ class TestPartOptionsAction(TestCase):
     @staticmethod
     def find_elem(repo, description: str):
         return [repo.get(elem) for elem in repo.list()
-                if repo.get(elem).description == description][0]
+                if str(repo.get(elem).description) == description][0]

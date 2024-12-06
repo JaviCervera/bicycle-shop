@@ -1,21 +1,22 @@
+from catalog.domain import Description
 from catalog.sqlalchemy_infra import SqlAlchemyPartOptionRepository
 
 
 def init_part_option_repository(repo: SqlAlchemyPartOptionRepository) -> None:
     options = [
-        (1, 'Full-suspension', 130, True),
-        (1, 'Diamond', 100, True),
-        (1, 'Step-through', 90, True),
-        (2, 'Matte', 50, True),
-        (2, 'Shiny', 30, True),
-        (3, 'Road wheels', 80, True),
-        (3, 'Mountain wheels', 90, True),
-        (3, 'Fat bike wheels', 100, True),
-        (4, 'Red', 20, True),
-        (4, 'Black', 25, True),
-        (4, 'Blue', 20, True),
-        (5, 'Single-speed chain', 43, True),
-        (5, '8-speed chain', 90, False),
+        (1, Description('Full-suspension'), 130, True),
+        (1, Description('Diamond'), 100, True),
+        (1, Description('Step-through'), 90, True),
+        (2, Description('Matte'), 50, True),
+        (2, Description('Shiny'), 30, True),
+        (3, Description('Road wheels'), 80, True),
+        (3, Description('Mountain wheels'), 90, True),
+        (3, Description('Fat bike wheels'), 100, True),
+        (4, Description('Red'), 20, True),
+        (4, Description('Black'), 25, True),
+        (4, Description('Blue'), 20, True),
+        (5, Description('Single-speed chain'), 43, True),
+        (5, Description('8-speed chain'), 90, False),
     ]
     incompatibilities = [
         (2, 7),

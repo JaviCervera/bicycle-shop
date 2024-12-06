@@ -2,7 +2,8 @@ import logging
 from argparse import ArgumentParser
 from typing import Callable, Iterable, List, Optional, Sequence
 
-from catalog.domain import PartOption, Product, ProductPart, ProductPartId
+from catalog.domain import Description, PartOption, Product, ProductPart, \
+    ProductPartId
 from cli_app import create_app
 
 GetPartOptionsFunc = \
@@ -10,7 +11,7 @@ GetPartOptionsFunc = \
 
 
 def main() -> None:
-    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
+    # logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
     url = server_url()
     print_welcome_message(url)
     with create_app(url) as app:
@@ -53,12 +54,14 @@ def select_options(
         sel_option = select_elem(
             [opt.description for opt in options],
             [opt.price for opt in options],
-            part.description.lower())
+            str(part.description).lower())
         selected.append(options[sel_option])
     return selected
 
 
-def select_elem(names: Sequence[str], prices: Sequence[float], type_: str) -> int:
+def select_elem(
+        names: Sequence[Description],
+        prices: Sequence[float], type_: str) -> int:
     print(f'Select {type_}:')
     for i in range(len(names)):
         price_str = f' - {prices[i]} EUR' if len(prices) > i else ''

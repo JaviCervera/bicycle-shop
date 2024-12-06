@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import Product, ProductId, ProductRepository
+from catalog.domain import Description, Product, ProductId, ProductRepository
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
@@ -23,10 +23,11 @@ class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
         result = self._session.scalars(
             select(ProductModel) \
                 .where(ProductModel.id == id_)).first()
-        return Product(result.id, result.description) if result else None
+        return Product(result.id, Description(result.description)) \
+            if result else None
 
-    def create(self, description: str) -> Product:
-        model = ProductModel(id=None, description=description)
+    def create(self, description: Description) -> Product:
+        model = ProductModel(id=None, description=str(description))
         self._session.add(model)
         self._session.flush()
-        return Product(model.id, model.description)
+        return Product(model.id, Description(model.description))

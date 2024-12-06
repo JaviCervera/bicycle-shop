@@ -151,11 +151,11 @@ option_price_modifiers:
 
 ## TODO:
 
+- Ids should be of their own classes with invariant checking, not int alias
+  (validate_id will no longer be necessary and validate_type will be used).
 - Runtime type validations should not be needed using mypy linting.
 - Comment methods.
 - OpenAPI specification.
 - Data model diagram.
-- Ids should be of their own classes with invariant checking, not int alias
-  (validate_id will no longer be necessary and validate_type will be used).
 - CloudFormation template?
 - Update README.
