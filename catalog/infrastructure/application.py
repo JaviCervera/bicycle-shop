@@ -1,4 +1,3 @@
-from logging import Logger
 from typing import Self
 
 from sqlalchemy import create_engine
@@ -12,16 +11,16 @@ from .sqlalchemy_product_repository import SqlAlchemyProductRepository
 
 
 class Application:
-    def __init__(self, url: str, logger: Logger, echo = False):
+    def __init__(self, url: str, echo=False):
         engine = create_engine(url, echo=echo)
         create_models(engine)
         self.product_repo = SqlAlchemyProductRepository(engine)
         self.part_repo = SqlAlchemyProductPartRepository(engine)
         self.option_repo = SqlAlchemyPartOptionRepository(engine)
-        self.products = ProductsAction(self.product_repo, logger)
-        self.product_parts = ProductPartsAction(self.part_repo, logger)
-        self.part_options = PartOptionsAction(self.option_repo, logger)
-        self.total_price = TotalPriceAction(self.option_repo, logger)
+        self.products = ProductsAction(self.product_repo)
+        self.product_parts = ProductPartsAction(self.part_repo)
+        self.part_options = PartOptionsAction(self.option_repo)
+        self.total_price = TotalPriceAction(self.option_repo)
 
     def __enter__(self) -> Self:
         self.product_repo.__enter__()

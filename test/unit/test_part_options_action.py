@@ -1,4 +1,3 @@
-import logging
 from unittest import TestCase
 
 from catalog.application import PartOptionsAction
@@ -11,9 +10,7 @@ class TestPartOptionsAction(TestCase):
     def setUp(self):
         self.part_repo = MockProductPartRepository()
         self.option_repo = MockPartOptionRepository()
-        self.part_options = PartOptionsAction(
-            self.option_repo,
-            logging.getLogger())
+        self.part_options = PartOptionsAction(self.option_repo)
 
     def test_only_returns_options_compatible_with_selection(self):
         self.assertEqual(

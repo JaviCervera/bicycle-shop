@@ -151,6 +151,7 @@ option_price_modifiers:
 
 ## TODO:
 
+- Use Marshmallow to serialize SQLAlchemy models.
 - Comment methods.
 - OpenAPI specification.
 - Data model diagram.

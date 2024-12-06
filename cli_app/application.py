@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Iterable, Optional, Self, Union
 
@@ -65,7 +64,7 @@ def create_app(
     if url:
         return ApplicationProxy(url)
     else:
-        app = Application('sqlite+pysqlite:///:memory:', logging.getLogger())
+        app = Application('sqlite+pysqlite:///:memory:')
         init_product_repository(app.product_repo)
         init_product_part_repository(app.part_repo)
         init_part_option_repository(app.option_repo)

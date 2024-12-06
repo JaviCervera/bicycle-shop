@@ -1,49 +1,44 @@
+import logging
 from itertools import chain
-from logging import Logger
 from typing import Iterable
 
 from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
     ProductPartId
+from .log import log
 
 
 class PartOptionsAction:
-    def __init__(self, repo: PartOptionRepository, logger: Logger):
+    def __init__(self, repo: PartOptionRepository):
         self._repo = repo
-        self._logger = logger
 
+    @log
     def __call__(
             self,
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
-        self._logger.info(f'PartOptionsAction({part_id}, {selected}) called')
         options = self._in_stock(self._compatible(part_id, selected))
-        self._logger.info(f'PartOptionsAction({part_id}, {selected}) result: '
-                          f'{options}')
         return options
 
+    @log
     def _compatible(
             self,
             part_id: ProductPartId,
             selected_options: Iterable[PartOption]) -> Iterable[PartOption]:
         part_options = self._repo.list(part_id)
-        self._logger.debug(f'PartOptionsAction._compatible has found the '
-                           f'following options for part {part_id}:'
-                           f' {part_options}')
+        logging.debug(f'PartOptionsAction._compatible found the following '
+                      f'options for part {part_id}: {part_options}')
         all_incompatibilities = self._all_incompatibilities(selected_options)
         return [self._repo.get(opt)  # type: ignore
                 for opt in part_options
                 if opt not in all_incompatibilities]
 
+    @log
     def _all_incompatibilities(
             self, selected_options: Iterable[PartOption]) -> Iterable[PartOptionId]:
         incomps = [self._repo.list_incompatibilities(opt.id)
                    for opt in selected_options]
-        flattened_set = set(chain.from_iterable(incomps))
-        self._logger.debug(f'PartOptionsAction._all_incompatibilities'
-                           f'({selected_options}): {flattened_set}')
-        return flattened_set
+        return set(chain.from_iterable(incomps))
 
+    @log
     def _in_stock(self, options: Iterable[PartOption]) -> Iterable[PartOption]:
-        in_stock = [opt for opt in options if opt.in_stock]
-        self._logger.debug(f'PartOptionsAction._in_stock({options}): {in_stock}')
-        return in_stock
+        return [opt for opt in options if opt.in_stock]

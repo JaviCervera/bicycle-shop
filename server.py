@@ -55,8 +55,7 @@ class Server:
     @staticmethod
     def app() -> Application:
         logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-        logger = logging.getLogger()
-        app = Application('sqlite+pysqlite:///:memory:', logger)
+        app = Application('sqlite+pysqlite:///:memory:', True)
         init_product_repository(app.product_repo)
         init_product_part_repository(app.part_repo)
         init_part_option_repository(app.option_repo)
