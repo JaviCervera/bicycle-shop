@@ -2,13 +2,10 @@ from logging import Logger
 from typing import Iterable
 
 from catalog.domain import Product, ProductRepository
-from catalog.domain.validations import validate_type
 
 
 class ProductsAction:
     def __init__(self, repo: ProductRepository, logger: Logger):
-        validate_type(repo, ProductRepository, 'repo')
-        validate_type(logger, Logger, 'logger')
         self._repo = repo
         self._logger = logger
 

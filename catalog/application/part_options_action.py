@@ -4,13 +4,10 @@ from typing import Iterable
 
 from catalog.domain import PartOption, PartOptionId, PartOptionRepository, \
     ProductPartId
-from catalog.domain.validations import validate_iterable, validate_type
 
 
 class PartOptionsAction:
     def __init__(self, repo: PartOptionRepository, logger: Logger):
-        validate_type(repo, PartOptionRepository, 'repo')
-        validate_type(logger, Logger, 'logger')
         self._repo = repo
         self._logger = logger
 
@@ -19,8 +16,6 @@ class PartOptionsAction:
             part_id: ProductPartId,
             selected: Iterable[PartOption]) -> Iterable[PartOption]:
         self._logger.info(f'PartOptionsAction({part_id}, {selected}) called')
-        validate_type(part_id, ProductPartId, 'part_id')
-        validate_iterable(selected, PartOption, 'selected')
         options = self._in_stock(self._compatible(part_id, selected))
         self._logger.info(f'PartOptionsAction({part_id}, {selected}) result: '
                           f'{options}')

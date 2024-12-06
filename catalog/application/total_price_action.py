@@ -3,18 +3,14 @@ from math import prod
 from typing import Iterable
 
 from catalog.domain import PartOption, PartOptionId, PartOptionRepository
-from catalog.domain.validations import validate_iterable, validate_type
 
 
 class TotalPriceAction:
     def __init__(self, repo: PartOptionRepository, logger: Logger):
-        validate_type(repo, PartOptionRepository, 'repo')
-        validate_type(logger, Logger, 'logger')
         self._repo = repo
         self._logger = logger
 
     def __call__(self, selected: Iterable[PartOption]) -> float:
-        validate_iterable(selected, PartOption, 'selected')
         self._logger.info(f'TotalPriceAction({selected}) called')
         option_ids = [opt.id for opt in selected]
         total = sum([self._calc_price(opt, option_ids) for opt in selected])
