@@ -1,3 +1,23 @@
+"""
+Markus Sports Equipment Store - Main program
+============================================
+
+App usage:
+To run the application as a monolith (with the backend embedded in the app),
+just run:
+
+$ python3 main.py
+
+To run with a split backend / frontend architecture, first start the server by running:
+
+$ python3 server.py
+
+And then, on a separate terminal session, do:
+
+$ python3 main.py --url http://localhost:8080
+
+"""
+
 from cli_app import create_catalog, display_order_summary, print_welcome_message, \
     select_options, select_product, server_url
 

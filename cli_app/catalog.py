@@ -7,11 +7,11 @@ from catalog.domain import Money, PartOption, Product, ProductId, \
     ProductPart, ProductPartId
 from catalog.infrastructure import Catalog
 from catalog.infrastructure.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
-from test.integration.init_part_option_repository \
+from catalog.infrastructure.init_part_option_repository \
     import init_part_option_repository
-from test.integration.init_product_part_repository \
+from catalog.infrastructure.init_product_part_repository \
     import init_product_part_repository
-from test.integration.init_product_reposity import init_product_repository
+from catalog.infrastructure.init_product_reposity import init_product_repository
 
 
 class CatalogProxy:

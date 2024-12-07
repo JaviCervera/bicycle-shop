@@ -6,7 +6,7 @@ from catalog.domain import Description, Money, PartOption, PartOptionId, \
     ProductPartId
 from catalog.infrastructure import create_models, \
     SqlAlchemyPartOptionRepository
-from .init_part_option_repository import init_part_option_repository
+from catalog.infrastructure.init_part_option_repository import init_part_option_repository
 
 
 class TestSqlAlchemyPartOptionRepository(TestCase):

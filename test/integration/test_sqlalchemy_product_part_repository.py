@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from catalog.domain import Description, ProductId, ProductPart, ProductPartId
 from catalog.infrastructure import create_models, \
     SqlAlchemyProductPartRepository
-from .init_product_part_repository import init_product_part_repository
+from catalog.infrastructure.init_product_part_repository import init_product_part_repository
 
 
 class TestSqlAlchemyProductPartRepository(TestCase):

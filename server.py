@@ -1,3 +1,12 @@
+"""
+Markus Sports Equipment Store - Simple web server
+=================================================
+
+Please check README.md or the header of main.py file
+for instructions.
+
+"""
+
 import json
 import logging
 import sys
@@ -10,11 +19,11 @@ from catalog.domain import PartOption, PartOptionRepository, ProductId, \
     ProductPartId
 from catalog.infrastructure import Catalog
 from catalog.infrastructure.schemas import PartOptionSchema, ProductPartSchema, ProductSchema
-from test.integration.init_part_option_repository \
+from catalog.infrastructure.init_part_option_repository \
     import init_part_option_repository
-from test.integration.init_product_part_repository \
+from catalog.infrastructure.init_product_part_repository \
     import init_product_part_repository
-from test.integration.init_product_reposity import init_product_repository
+from catalog.infrastructure.init_product_reposity import init_product_repository
 
 
 class Server:
