@@ -1,14 +1,56 @@
-# bicycle-shop
+# Markus Sports Equipment Store
 
 [![test](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml/badge.svg)](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml)
 
-To run the tests, do:
+## Instructions
+
+The application requires Python 3.11 and PIP. It is recommended to use a
+virtual environment before doing any of the following. To install one on
+a Unix-like system (like Linux, macOS or WSL) using `venv`, open a terminal
+and run the following:
 
 ```shell
-python -m unittest
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-(In some systems, the executable might be `python3` instead of `python`).
+The application dependencies can be installed with:
+
+```shell
+pip install -r requirements.txt
+```
+
+However, if you want to run the tests and linters locally (they are set up as a
+CI  job on GitHub Actions that run automatically on every commit pushed), you
+can instead run:
+
+```shell
+pip install -r requirements-dev.txt
+```
+
+The application has a simple terminal based interface to test the
+functionality. It can be run in one of two modes:
+
+* As a monolith, with frontend and backend deployed as a single application.
+* With a split frontend / backend architecture.
+
+To run the application as a monolith, just run:
+
+```shell
+python3 main.py
+```
+
+To run with a split backend / frontend architecture, first start the server by running:
+
+```shell
+python3 server.py
+```
+
+And then, on a separate terminal session, do:
+
+```shell
+python3 main.py --url http://localhost:8080
+```
 
 ## Problem description
 
@@ -53,33 +95,113 @@ These kinds of variations can always happen, and they might depend on any of the
 5. The price of a product is calculated by adding up the individual prices of each selected part.
 6. The price of the options in some parts might depend on which options were selected for other parts.
 
+## System architecture
+
+With the requirements given, the application must support the use cases to
+select elements from a catalog of parts for bicycles, and no features like
+purchasing is requested to be implemented, so it has been left out.
+
+The implementation follows an OOP design with emphasis on SOLID principles
+and a separation of responsibilities following
+[*Domain Driven Design*](https://en.wikipedia.org/wiki/Domain-driven_design).
+
+The application uses a simplified
+[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+with 3 layers:
+
+> Infrastructure -> Application -> Domain
+
+The arrows represent the direction in which dependencies can be defined. For
+example, `Infrastructure` can know about components defined in `Application`
+or `Domain`, but none of those can know about the `Infrastructure` layer.
+
+* `Domain` resides in the package `catalog.domain` and defines the classes that
+  map the concepts specified in the requirements and their business logic.
+  The classes here mostly enforce some invariants on the data (following the
+  [*Design by contract*](https://en.wikipedia.org/wiki/Design_by_contract)
+  approach). The classes implemented in this layer are immutable.
+  Also in this layer are defined the interfaces for the repositories used to
+  retrieve and store the domain models in the database. As persistence is a
+  concern of the `Infrastructure` layer, they are just interfaces in this
+  layer, and the actual implementation will be injected by the infrastructure
+  into the use cases that require them (this complies with the
+  [*Dependency inversion principle*](https://en.wikipedia.org/wiki/Dependency_inversion_principle)).
+* `Application` is implemented in the package `catalog.application`, and defines
+  the use cases that have been extracted from the requirements. Coordination
+  of the classes in the `Domain` layer, persistence through the repositories,
+  and logging are the responsibilities assigned to this layer. The use cases
+  are the following:
+  * List available products.
+  * List part types for a given product.
+  * List options available for a part type based on other options selected
+    for other parts.
+  * Return the total price of all options specified, taking into account
+    that some of them can influence the price of others.
+* `Infrastructure` layer can be found in the package `catalog.infrastructure`.
+  For this task, an infrastructure based on an in memory **SQLite** database has
+  been used. An implementation for all repositories defined in the `Domain`
+  layer has been written, which access the SQLite database.
+  [`SQLAlchemy`](https://www.sqlalchemy.org/)'s ORM facilities have been used
+  to implement this, so switching to a different database like **MySQL** can
+  be done easily just by modifying the connection information in SQLAlchemy.
+  Functions to initialize the repositories with sample data matching the one
+  given on the exercise description are provided, and used both in the 
+  integration tests for the repositories and the backend.
+  
+  Also, [`Marshmallow`](https://marshmallow.readthedocs.io/en/stable/)'s
+  schemas for the domain classes are provided in this package to aid with
+  the serialization and deserialization of the data for use in the server's
+  responses.
+
+On the monolithic mode, the CLI app directly calls into a `Catalog` instance
+which represents all the use cases for the proposed bicycle store task. On the
+split mode, the CLI app calls into a `CatalogProxy` instance which forwards the
+calls through a REST API to the server. The interface of both classes is
+identical, and they act as a [*Facade*](https://en.wikipedia.org/wiki/Facade_pattern).
+
+The component who uses the Facade should not access anything defined on the
+other side (so a Facade keeps the components on each side of itself completely
+decoupled from each other). This means that the classes defined on the other
+end should not be accessible outside the Facade. However, to keep this solution
+lightweight, the domain classes are directly imported from `catalog.domain` as
+a shortcut and to avoid duplication of classes in such a small piece of code.
+
 ## Requirements conformance
 
 1. The store must be able to sell different kinds of products.
 
-> This requirement is satisfied by providing a `GetProductsCommand` class that can return an arbitrary number of `Product`s.
+> This requirement is satisfied by providing a `ProductsAction` class that can
+> return an arbitrary number of `Product`s.
 
 2. Each product is divided in different parts that the client can customize by choosing from several options for each part.
 
-> `GetProductPartsCommand` returns the list of `ProductPart`s available for a specific product. `GetPartOptions` returns the options available for a given part.
+> `ProductPartsAction` returns the list of `ProductPart`s available for a
+> specific product. `PartOptionsAction` returns the options available
+> for a given part.
 
 3. The option selected for a part might be incompatible with other options of any parts.
 
-> `PartOptionRepository` can provide a list of `PartOption`s which are incompatible with another one.
-> `GetPartOptionsCommand` returns the options available for a part based on other options selected.
+> `PartOptionRepository` can provide a list of `PartOption`s which are incompatible
+> with the given one. `PartOptionsAction` returns the options available for a
+> part based on other options selected.
 
 4. You can't select options which are out of stock.
 
-> `PartOption` has an `in_stock` property that indicates this. This is enough as the purchase functionality is not added to this exercise. In that case, the class would instead hold a `units_available` options. An option would be in stock if its value is > 0, and would decrease with each order purchased that contains the option.
-> `GetPartOptionsCommand` returns only options which are in stock.
+> `PartOption` has an `in_stock` property that indicates this. This is enough
+> as the purchase functionality is not added to this exercise. In that case,
+> the class would instead hold a `units_available` options. An option would
+> be in stock if its value is > 0, and would decrease with each order purchased
+> that contains the option. `PartOptionsAction` returns only options which
+> are in stock.
 
 5. The price of a product is calculated by adding up the individual prices of each selected part.
 
-> `CalculatePriceCommand` computes the total price from a list of parts.
+> `PartOptionsPriceAction` computes the total price from a list of parts.
 
 6. The price of the options in some parts might depend on which options were selected for other parts.
 
-> `CalculatePriceCommand` takes into account if a selected option modifies other options in the list.
+> `PartOptionsPriceAction` takes into account if a selected option modifies
+> other options in the list.
 
 ## Data model
 
@@ -135,7 +257,7 @@ Ref: option_price_modifiers.depending_option_id > part_options.id
 ```yaml
 openapi: 3.0.3
 info:
-  title: Markus Sports Equipment Store!
+  title: Markus Sports Equipment Store
   version: 1.0.0
 paths:
   /catalog/products:
@@ -278,6 +400,5 @@ components:
 ## TODO:
 
 - Comment code.
-- Update README.
-- 100% test coverage.
+- Write unit tests (100% test coverage).
 - CloudFormation template?
