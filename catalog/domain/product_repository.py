@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Optional
 
-from .description import Description
+from .name import Name
 from .product import Product, ProductId
 
 class ProductRepository(ABC):
@@ -14,5 +14,5 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    def create(self, description: Description) -> Product:
+    def create(self, name: Name) -> Product:
         pass

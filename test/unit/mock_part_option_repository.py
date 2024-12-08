@@ -1,6 +1,6 @@
 from typing import Iterable, Optional
 
-from catalog.domain import Description, Money, PartOption, PartOptionId, \
+from catalog.domain import Money, Name, PartOption, PartOptionId, \
     PartOptionRepository, ProductPartId
 
 
@@ -9,79 +9,79 @@ class MockPartOptionRepository(PartOptionRepository):
         PartOption(
             PartOptionId(1),
             ProductPartId(1),
-            Description('Full-suspension'),
+            Name('Full-suspension'),
             Money(130),
             True),
         PartOption(
             PartOptionId(2),
             ProductPartId(1),
-            Description('Diamond'),
+            Name('Diamond'),
             Money(100),
             True),
         PartOption(
             PartOptionId(3),
             ProductPartId(1),
-            Description('Step-through'),
+            Name('Step-through'),
             Money(90),
             True),
         PartOption(
             PartOptionId(4),
             ProductPartId(2),
-            Description('Matte'),
+            Name('Matte'),
             Money(50),
             True),
         PartOption(
             PartOptionId(5),
             ProductPartId(2),
-            Description('Shiny'),
+            Name('Shiny'),
             Money(30),
             True),
         PartOption(
             PartOptionId(6),
             ProductPartId(3),
-            Description('Road wheels'),
+            Name('Road wheels'),
             Money(80),
             True),
         PartOption(
             PartOptionId(7),
             ProductPartId(3),
-            Description('Mountain wheels'),
+            Name('Mountain wheels'),
             Money(90),
             True),
         PartOption(
             PartOptionId(8),
             ProductPartId(3),
-            Description('Fat bike wheels'),
+            Name('Fat bike wheels'),
             Money(100),
             True),
         PartOption(
             PartOptionId(9),
             ProductPartId(4),
-            Description('Red'),
+            Name('Red'),
             Money(20),
             True),
         PartOption(
             PartOptionId(10),
             ProductPartId(4),
-            Description('Black'),
+            Name('Black'),
             Money(25),
             True),
         PartOption(
             PartOptionId(11),
             ProductPartId(4),
-            Description('Blue'),
+            Name('Blue'),
             Money(20),
             True),
         PartOption(
             PartOptionId(12),
             ProductPartId(5),
-            Description('Single-speed chain'),
+            Name('Single-speed chain'),
             Money(43),
             True),
         PartOption(
             PartOptionId(13),
             ProductPartId(5),
-            Description('8-speed chain'),
+            Name('8-speed chain'),
             Money(90),
             False),
     ]
@@ -103,7 +103,7 @@ class MockPartOptionRepository(PartOptionRepository):
     def create(
             self,
             part_id: ProductPartId,
-            description: Description,
+            name: Name,
             price: float,
             in_stock: bool) -> PartOption:
         raise NotImplementedError()
@@ -145,5 +145,5 @@ class MockPartOptionRepository(PartOptionRepository):
             self,
             part_id: ProductPartId,
             depending_option_id: PartOptionId,
-            coef: float) -> None:
+            coefficient: float) -> None:
         pass

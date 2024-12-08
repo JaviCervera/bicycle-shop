@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import Description, Product, ProductId, ProductRepository
+from catalog.domain import Name, Product, ProductId, ProductRepository
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
@@ -11,7 +11,7 @@ from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 class ProductModel(SqlAlchemyBase):
     __tablename__ = 'products'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    description: Mapped[str]
+    name: Mapped[str]
 
 
 class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
@@ -23,11 +23,11 @@ class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
         result = self._session.scalars(
             select(ProductModel) \
                 .where(ProductModel.id == int(id_))).first()
-        return Product(ProductId(result.id), Description(result.description)) \
+        return Product(ProductId(result.id), Name(result.name)) \
             if result else None
 
-    def create(self, description: Description) -> Product:
-        model = ProductModel(description=str(description))
+    def create(self, name: Name) -> Product:
+        model = ProductModel(name=str(name))
         self._session.add(model)
         self._session.flush()
-        return Product(ProductId(model.id), Description(model.description))
+        return Product(ProductId(model.id), Name(model.name))

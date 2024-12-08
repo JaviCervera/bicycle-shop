@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from sqlalchemy import create_engine
 
-from catalog.domain import Description, ProductId, ProductPart, ProductPartId
+from catalog.domain import Name, ProductId, ProductPart, ProductPartId
 from catalog.infrastructure import create_models, \
     SqlAlchemyProductPartRepository
 from catalog.infrastructure.init_product_part_repository import init_product_part_repository
@@ -28,23 +28,23 @@ class TestSqlAlchemyProductPartRepository(TestCase):
                 ProductPart(
                     ProductPartId(1),
                     ProductId(1),
-                    Description('Frame type')),
+                    Name('Frame type')),
                 ProductPart(
                     ProductPartId(2),
                     ProductId(1),
-                    Description('Frame finish')),
+                    Name('Frame finish')),
                 ProductPart(
                     ProductPartId(3),
                     ProductId(1),
-                    Description('Wheels')),
+                    Name('Wheels')),
                 ProductPart(
                     ProductPartId(4),
                     ProductId(1),
-                    Description('Rim color')),
+                    Name('Rim color')),
                 ProductPart(
                     ProductPartId(5),
                     ProductId(1),
-                    Description('Chain')),
+                    Name('Chain')),
             ],
             parts)
 

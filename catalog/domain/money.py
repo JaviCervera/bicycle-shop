@@ -15,8 +15,8 @@ class Money:
     def __sub__(self, other: 'Money') -> 'Money':
         return Money(self.amount - other.amount)
 
-    def __mul__(self, coef: float) -> 'Money':
-        return Money(self.amount * coef)
+    def __mul__(self, coefficient: float) -> 'Money':
+        return Money(self.amount * coefficient)
 
     def __float__(self) -> float:
         return self.amount

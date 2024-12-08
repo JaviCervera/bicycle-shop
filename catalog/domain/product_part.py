@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from .description import Description
+from .name import Name
 from .model_id import ModelId
 from .product import ProductId
 
@@ -11,4 +11,4 @@ class ProductPartId(ModelId):
 class ProductPart:
     id: ProductPartId
     product_id: ProductId
-    description: Description
+    name: Name

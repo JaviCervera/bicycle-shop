@@ -1,4 +1,4 @@
-from .description import Description
+from .name import Name
 from .money import Money
 from .part_option import PartOption, PartOptionId
 from .part_option_repository import PartOptionRepository
@@ -8,8 +8,8 @@ from .product_part_repository import ProductPartRepository
 from .product_repository import ProductRepository
 
 __all__ = [
-    'Description',
     'Money',
+    'Name',
     'PartOption',
     'PartOptionId',
     'PartOptionRepository',

@@ -212,7 +212,7 @@ Specified in [DBML](https://dbml.dbdiagram.io/home) using [dbdiagram.io](https:/
 ```
 Table products {
   id integer [primary key]
-  description string
+  name string
   note: 'The list of products in the catalog'
 }
 
@@ -225,7 +225,7 @@ Table product_parts {
 Table part_options {
   id integer [primary key]
   part_id integer
-  description string
+  name string
   price float
   in_stock bool
   note: 'The available options for each part, with price and availability'
@@ -240,7 +240,7 @@ Table option_incompatibilities {
 Table option_price_modifiers {
   part_id integer [primary key]
   depending_option_id integer [primary key]
-  coef float
+  coefficient float
   note: 'Indicates that the price of all options in a part will be affected by a given coefficient if an option is selected'
 }
 
@@ -477,6 +477,20 @@ Second, the price that the final product had at the time it was added to the
 cart is preserved in `cart_product`. This could give the UI the chance to
 highlight options who have seen their price reduced since they were added, as
 that could persuade the user to purchase the product.
+
+## Administrative workflows
+
+### New product creation
+
+What information is required to create a new product? How does the database change?
+
+### Adding a new part choice
+
+How can Marcus introduce a new rim color? Describe the UI and how the database changes.
+
+### Setting prices
+
+How can Marcus change the price of a specific part or specify particular pricing for combinations of choices? How does the UI and database handle this?
 
 ## TODO:
 

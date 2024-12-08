@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from typing import Callable, Iterable, List, Optional, Sequence
 
-from catalog.domain import Description, Money, PartOption, Product, \
+from catalog.domain import Money, Name, PartOption, Product, \
     ProductPart, ProductPartId
 
 GetPartOptionsFunc = \
@@ -33,7 +33,7 @@ def select_product(products: Iterable[Product]) -> Product:
     Displays a list with all passed product and returns
     the one selected by the user.
     """
-    sel_index = _select_elem([p.description for p in products], [], 'product')
+    sel_index = _select_elem([p.name for p in products], [], 'product')
     return list(products)[sel_index]
 
 
@@ -52,15 +52,15 @@ def select_options(
     for part in parts:
         options = list(get_options(part.id, selected))
         sel_option = _select_elem(
-            [opt.description for opt in options],
+            [opt.name for opt in options],
             [opt.price for opt in options],
-            str(part.description).lower())
+            str(part.name).lower())
         selected.append(options[sel_option])
     return selected
 
 
 def _select_elem(
-        names: Sequence[Description],
+        names: Sequence[Name],
         prices: Sequence[Money], type_: str) -> int:
     print(f'Select {type_}:')
     for i in range(len(names)):
@@ -91,9 +91,9 @@ def display_order_summary(
     :param price: The total price.
     """
     print()
-    print(f'Your {product.description} order:')
+    print(f'Your {product.name} order:')
     for opt in selected:
         part = [part for part in parts if part.id == opt.part_id][0]
-        print(f'* {part.description}: {opt.description}')
+        print(f'* {part.name}: {opt.name}')
     print()
     print(f'Total price: {price} EUR')

@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import Description, ProductId, ProductPart, \
+from catalog.domain import Name, ProductId, ProductPart, \
     ProductPartId, ProductPartRepository
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
@@ -13,7 +13,7 @@ class ProductPartModel(SqlAlchemyBase):
     __tablename__ = 'product_parts'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     product_id: Mapped[int]
-    description: Mapped[str]
+    name: Mapped[str]
 
 
 class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepository):
@@ -32,18 +32,18 @@ class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepos
         return ProductPart(
             id=ProductPartId(result.id),
             product_id=ProductId(result.product_id),
-            description=Description(result.description)) if result else None
+            name=Name(result.name)) if result else None
 
     def create(
             self,
             product_id: ProductId,
-            description: Description) -> ProductPart:
+            name: Name) -> ProductPart:
         model = ProductPartModel(
             product_id=int(product_id),
-            description=str(description))
+            name=str(name))
         self._session.add(model)
         self._session.flush()
         return ProductPart(
             id=ProductPartId(model.id),
             product_id=ProductId(model.product_id),
-            description=Description(model.description))
+            name=Name(model.name))

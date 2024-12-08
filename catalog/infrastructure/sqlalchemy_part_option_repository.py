@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from sqlalchemy import  select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from catalog.domain import Description, Money, PartOption, PartOptionId, \
+from catalog.domain import Money, Name, PartOption, PartOptionId, \
     PartOptionRepository, ProductPartId
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
@@ -13,7 +13,7 @@ class PartOptionModel(SqlAlchemyBase):
     __tablename__ = 'part_options'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     part_id: Mapped[int]
-    description: Mapped[str]
+    name: Mapped[str]
     price: Mapped[float]
     in_stock: Mapped[bool]
 
@@ -28,7 +28,7 @@ class OptionPriceModifierModel(SqlAlchemyBase):
     __tablename__ = 'option_price_modifiers'
     part_id: Mapped[int] = mapped_column(primary_key=True)
     depending_option_id: Mapped[int] = mapped_column(primary_key=True)
-    coef: Mapped[float]
+    coefficient: Mapped[float]
 
 
 class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseRepository):
@@ -48,19 +48,19 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
         return PartOption(
             id=PartOptionId(result.id),
             part_id=ProductPartId(result.part_id),
-            description=Description(result.description),
+            name=Name(result.name),
             price=Money(result.price),
             in_stock=result.in_stock) if result else None
 
     def create(
             self,
             part_id: ProductPartId,
-            description: Description,
+            name: Name,
             price: float,
             in_stock: bool) -> PartOption:
         model = PartOptionModel(
             part_id=int(part_id),
-            description=str(description),
+            name=str(name),
             price=float(price),
             in_stock=in_stock)
         self._session.add(model)
@@ -68,7 +68,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
         return PartOption(
             id=PartOptionId(model.id),
             part_id=ProductPartId(model.part_id),
-            description=Description(model.description),
+            name=Name(model.name),
             price=Money(model.price),
             in_stock=model.in_stock)
 
@@ -104,7 +104,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             part_id: ProductPartId,
             depending_option_id: PartOptionId) -> float:
         result = self._session.scalars(
-            select(OptionPriceModifierModel.coef) \
+            select(OptionPriceModifierModel.coefficient) \
                 .where(OptionPriceModifierModel.part_id == int(part_id) \
                        and OptionPriceModifierModel.depending_option_id \
                        == int(depending_option_id))).first()
@@ -114,10 +114,10 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             self,
             part_id: ProductPartId,
             depending_option_id: PartOptionId,
-            coef: float) -> None:
+            coefficient: float) -> None:
         model = OptionPriceModifierModel(
             part_id=int(part_id),
             depending_option_id=int(depending_option_id),
-            coef=coef)
+            coefficient=coefficient)
         self._session.add(model)
         self._session.flush()

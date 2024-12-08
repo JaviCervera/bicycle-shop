@@ -59,13 +59,13 @@ class TestPartOptionsAction(TestCase):
             )
         )
 
-    def find_part(self, description: str) -> ProductPartId:
-        return self.find_elem(self.part_repo, description).id
+    def find_part(self, name: str) -> ProductPartId:
+        return self.find_elem(self.part_repo, name).id
 
-    def find_option(self, description: str) -> PartOption:
-        return self.find_elem(self.option_repo, description)
+    def find_option(self, name: str) -> PartOption:
+        return self.find_elem(self.option_repo, name)
 
     @staticmethod
-    def find_elem(repo, description: str):
+    def find_elem(repo, name: str):
         return [repo.get(elem) for elem in repo.list()
-                if str(repo.get(elem).description) == description][0]
+                if str(repo.get(elem).name) == name][0]
