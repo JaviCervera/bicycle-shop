@@ -1,4 +1,4 @@
-# Markus Sports Equipment Store
+# Marcus Sports Equipment Store
 
 [![test](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml/badge.svg)](https://github.com/JaviCervera/bicycle-shop/actions/workflows/test.yml)
 
@@ -187,12 +187,9 @@ a shortcut and to avoid duplication of classes in such a small piece of code.
 
 4. You can't select options which are out of stock.
 
-> `PartOption` has an `in_stock` property that indicates this. This is enough
-> as the purchase functionality is not added to this exercise. In that case,
-> the class would instead hold a `units_available` options. An option would
-> be in stock if its value is > 0, and would decrease with each order purchased
-> that contains the option. `PartOptionsAction` returns only options which
-> are in stock.
+> `PartOption` has an `in_stock` property that indicates this. This property
+> returns `True` when the `available_units` of the option is greater than 0.
+> `PartOptionsAction` returns only options which are in stock.
 
 5. The price of a product is calculated by adding up the individual prices of each selected part.
 
@@ -219,6 +216,7 @@ Table products {
 Table product_parts {
   id integer [primary key]
   product_id integer
+  name string
   note: 'The parts that conform each product'
 }
 
@@ -227,13 +225,13 @@ Table part_options {
   part_id integer
   name string
   price float
-  in_stock bool
+  available_units int
   note: 'The available options for each part, with price and availability'
 }
 
 Table option_incompatibilities {
-  option_a integer [primary key]
-  option_b integer [primary key]
+  first_option_id integer [primary key]
+  second_option_id integer [primary key]
   note: 'Indicates incompatibility between two options'
 }
 
@@ -246,8 +244,8 @@ Table option_price_modifiers {
 
 Ref: product_parts.product_id > products.id
 Ref: part_options.part_id > product_parts.id
-Ref: option_incompatibilities.option_a > part_options.id
-Ref: option_incompatibilities.option_b > part_options.id
+Ref: option_incompatibilities.first_option_id > part_options.id
+Ref: option_incompatibilities.second_option_id > part_options.id
 Ref: option_price_modifiers.part_id > product_parts.id
 Ref: option_price_modifiers.depending_option_id > part_options.id
 ```
@@ -257,7 +255,7 @@ Ref: option_price_modifiers.depending_option_id > part_options.id
 ```yaml
 openapi: 3.0.3
 info:
-  title: Markus Sports Equipment Store
+  title: Marcus Sports Equipment Store
   version: 1.0.0
 paths:
   /catalog/products:
@@ -385,9 +383,9 @@ components:
           type: number
           format: float
           example: 130.0
-        in_stock:
-          type: boolean
-          example: true
+        available_units:
+          type: int
+          example: 5
     Price:
       type: object
       properties:
@@ -399,8 +397,10 @@ components:
 
 ## Product page
 
+![Product page](doc/product_page.png)
+
 The initial version of the store will only offer bicycles, but the application
-is prepared to offer more types of products, se a dropdown on the top left
+is prepared to offer more types of products, so a dropdown on the top left
 could offer a choice of products. On page load, a request to
 `/catalog/products` would be made to fill this dropdown. Each product could
 display an image on the page, for which we would have to update the
@@ -482,11 +482,88 @@ that could persuade the user to purchase the product.
 
 ### New product creation
 
-What information is required to create a new product? How does the database change?
+![Create product page](doc/create_product_page.png)
+
+The UI could present a text field at the top to introduce the name of the new
+product. Below, the screen would be split vertically in two parts:
+
+* On the left, another text field with a "+" button next to it allows to
+  introduce the parts available for the product. Underneath, there would be
+  a list view with all the parts, with buttons to edit or remove parts.
+* On the right, the same layout would be presented, but this side allows to
+  define part options for the part selected on the left.
+
+At the bottom, there should be buttons to cancel the creation of the product,
+or to confirm it. Cancelling would simply close the screen without any effect
+on the database. Creating the product, however would require the following
+endpoints:
+
+* `/catalog/products (POST)`: Receives the product name on the body, and
+  creates it by inserting a new row in the `products` table, generating an
+  autoincremented id automatically. The created product is returned.
+* `/catalog/product_parts (POST)`: Receives the product id and the part name on
+  the body, and creates the part by inserting a new row in the `product_parts`
+  table, generating an autoincremented id automatically. The created product
+  part is returned.
+* `/catalog/part_options (POST)`: Receives the product part id, the name, the
+  price, and the number of available units on the body, and creates the option
+  by inserting a new row in the `part_options` table, generating an
+  autoincremented id automatically. The created part option is returned.
+
+If any of the endpoints fail, the process should abort and any endpoints
+successfully called would have to be rolled back by invoking a `DELETE` verb
+on them (probably using the [*Saga* pattern](https://en.wikipedia.org/wiki/Long-running_transaction)).
 
 ### Adding a new part choice
 
-How can Marcus introduce a new rim color? Describe the UI and how the database changes.
+The previous section already displays a page that lets you define a new product
+with its parts and option. It would just be a matter of allowing it to support
+editing existing products. For that, we could see a page with the list of
+products available, and when selecting one we could go to the product creation
+page, but the button to create a product would be replaced with "Update
+product".
+
+When the button is pressed, the action executed is considerably different from
+the one for the creation of a product. It would do the following:
+
+* If the name of the product has changed, a `PUT` request to
+  `/catalog/products` will update it.
+* The list of parts will be compared with the old list:
+  * Newly added items will be created with a `POST` to `/catalog/product_parts`.
+  * Removed items will be deleted with a `DELETE` to the endpoint.
+* The list of options will be compared with the old list:
+  * New added items will be created with a `POST` to `/catalog/part_options`.
+  * Removed items will be deleted with a `DELETE` to the endpoint.
+  * Ones who have had the price or availability modified will send a `PUT` to
+    the endpoint.
+
+### Setting incompatibilities between parts
+
+There should be an "Option incompatibilities" page in the user admin section
+like this:
+
+![Option incompatibilities page](doc/option_incompatibilities_page.png)
+
+This screen could let you select a pair of part options that should be
+incompatible between them.
+
+A list on the left side of the screen could let you select any of the available
+options. The list of the right let you select between all the other options for
+the same product that do not belong to the same part.
+
+When the selection is confirmed by clicking the button on the bottom right, the
+selection should be compared against what was already registered on the database.
+
+Any new incompatibility pair should be registered with a `POST` call to
+`/catalog/part_option_incompatibilities`. Any removed pair should be deleted
+with `DELETE`.
+
+I has to be noted that this is a reciprocal relationship, so an incompatibility
+between options `1` and `2` is the same as an incompatibility between `2` and
+`1`. The endpoint will always register the option with the lower id as
+`first_option_id`. The UI should make sure that no incompatibilities are
+defined twice, for example by now showing on the other list an incompatible
+option that has already been defined for the other option selected.
 
 ### Setting prices
 
@@ -494,5 +571,6 @@ How can Marcus change the price of a specific part or specify particular pricing
 
 ## TODO:
 
+- Document unused endpoints as well.
 - Finish documentation.
 - Comment code.
