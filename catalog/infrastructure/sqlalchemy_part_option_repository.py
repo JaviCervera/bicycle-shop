@@ -20,8 +20,8 @@ class PartOptionModel(SqlAlchemyBase):
 
 class OptionIncompatibilityModel(SqlAlchemyBase):
     __tablename__ = 'option_incompatibilities'
-    option_a: Mapped[int] = mapped_column(primary_key=True)
-    option_b: Mapped[int] = mapped_column(primary_key=True)
+    first_option_id: Mapped[int] = mapped_column(primary_key=True)
+    second_option_id: Mapped[int] = mapped_column(primary_key=True)
 
 
 class OptionPriceModifierModel(SqlAlchemyBase):
@@ -75,21 +75,21 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
     def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:
         result_a = self._session.execute(
-            select(OptionIncompatibilityModel.option_a) \
-                .where(OptionIncompatibilityModel.option_b == int(id_))).all()
+            select(OptionIncompatibilityModel.first_option_id) \
+                .where(OptionIncompatibilityModel.second_option_id == int(id_))).all()
         result_b = self._session.execute(
-            select(OptionIncompatibilityModel.option_b) \
-                .where(OptionIncompatibilityModel.option_a == int(id_))).all()
-        return set([PartOptionId(row.option_a) for row in result_a]
-                   + [PartOptionId(row.option_b) for row in result_b])
+            select(OptionIncompatibilityModel.second_option_id) \
+                .where(OptionIncompatibilityModel.first_option_id == int(id_))).all()
+        return set([PartOptionId(row.first_option_id) for row in result_a]
+                   + [PartOptionId(row.second_option_id) for row in result_b])
 
     def create_incompatibility(
             self,
-            option_a: PartOptionId,
-            option_b: PartOptionId) -> None:
+            first_option_id: PartOptionId,
+            second_option_id: PartOptionId) -> None:
         self._session.add(OptionIncompatibilityModel(
-            option_a=min(int(option_a), int(option_b)),
-            option_b=max(int(option_a), int(option_b))))
+            first_option_id=min(int(first_option_id), int(second_option_id)),
+            second_option_id=max(int(first_option_id), int(second_option_id))))
         self._session.flush()
 
     def list_depending_options(
