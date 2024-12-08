@@ -4,7 +4,6 @@ Markus Sports Equipment Store - Simple web server
 
 Please check README.md or the header of main.py file
 for instructions.
-
 """
 
 import json

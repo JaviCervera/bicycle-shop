@@ -397,8 +397,90 @@ components:
           example: 120.25
 ```
 
+## Product page
+
+The initial version of the store will only offer bicycles, but the application
+is prepared to offer more types of products, se a dropdown on the top left
+could offer a choice of products. On page load, a request to
+`/catalog/products` would be made to fill this dropdown. Each product could
+display an image on the page, for which we would have to update the
+`products` DB table and their associated domain model with an additional
+field for the image URL.
+
+When a product is selected, `/catalog/product_parts` would be called
+to retrieve the list of parts for the product. Once retrieved, each part
+type would be represented with a label on the UI, while a call to
+`/catalog/part_options` would be used for each part to retrieve the available
+options, to be display on a dropdown below each label.
+
+Selection an option on any of the categories would require to request the
+options available for each part to be retrieved again, as the availability of
+options can depend on which others are selected, so changing the option for one
+part might be enabling new options on others.
+
+Every time an option is selected, a call to `/catalog/part_options_price` would
+be performed to retrieve the final price of the product with the selected
+options. Close to the place where the price is displayed, an "Add to cart"
+button should appear.
+
+## Adding to the cart
+
+When the user clicks on the button, the system needs to store the information
+about the part options selected, so when the user comes back to the page, the
+product still appears on their shopping cart until it is discarded or
+purchased.
+
+The first thing to highlight is that all the functionality that has been
+discussed until now belonged in a
+[*bounded context*](https://en.wikipedia.org/wiki/Domain-driven_design#Relationship_to_other_ideas)
+that we named `catalog`. Introducing a shopping cart could introduce
+a second `cart` context, which would be deployed as a second microservice if
+that was the kind of infrastructure selected.
+
+The database model for this second context would be:
+
+![Cart tables](doc/cart_data_model.png)
+
+```
+Table carts {
+  id integer [primary key]
+  user_id integer
+  note: 'The shopping cart for a given user'
+}
+
+Table cart_products {
+  id integer [primary key]
+  cart_id integer
+  product_id integer
+  price float
+  note: 'A product added to a specific shopping cart'
+}
+
+Table cart_part_options {
+  cart_product_id integer [primary key]
+  part_option_id integer [primary key]
+  note: 'An option selected for a part for a product in a shopping cart'
+}
+
+Ref: cart_products.cart_id > carts.id
+Ref: cart_part_options.cart_product_id > cart_products.id
+```
+
+There's a few things to note here:
+
+First, the cart holds a `user_id`. This is a 1:1 relationship, so each user on
+the store would have their own shopping cart. This implies that a `users` table
+would need to exists, but I have left the `user` bounded context outside of
+the scope.
+
+Second, the price that the final product had at the time it was added to the
+cart is preserved in `cart_product`. This could give the UI the chance to
+highlight options who have seen their price reduced since they were added, as
+that could persuade the user to purchase the product.
+
 ## TODO:
 
+- Replace description with name?
 - Comment code.
 - Write unit tests (100% test coverage).
 - CloudFormation template?
