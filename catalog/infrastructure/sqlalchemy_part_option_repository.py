@@ -4,7 +4,7 @@ from sqlalchemy import  select
 from sqlalchemy.orm import Mapped, mapped_column
 
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
-    PartOptionRepository, ProductPartId
+    PartOptionRepository, ProductPartId, Units
 from .sqlalchemy_base import SqlAlchemyBase
 from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
@@ -15,7 +15,7 @@ class PartOptionModel(SqlAlchemyBase):
     part_id: Mapped[int]
     name: Mapped[str]
     price: Mapped[float]
-    in_stock: Mapped[bool]
+    available_units: Mapped[int]
 
 
 class OptionIncompatibilityModel(SqlAlchemyBase):
@@ -50,19 +50,19 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             part_id=ProductPartId(result.part_id),
             name=Name(result.name),
             price=Money(result.price),
-            in_stock=result.in_stock) if result else None
+            available_units=Units(result.available_units)) if result else None
 
     def create(
             self,
             part_id: ProductPartId,
             name: Name,
-            price: float,
-            in_stock: bool) -> PartOption:
+            price: Money,
+            available_units: Units) -> PartOption:
         model = PartOptionModel(
             part_id=int(part_id),
             name=str(name),
             price=float(price),
-            in_stock=in_stock)
+            available_units=int(available_units))
         self._session.add(model)
         self._session.flush()
         return PartOption(
@@ -70,7 +70,7 @@ class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseReposit
             part_id=ProductPartId(model.part_id),
             name=Name(model.name),
             price=Money(model.price),
-            in_stock=model.in_stock)
+            available_units=Units(model.available_units))
 
     def list_incompatibilities(
             self, id_: PartOptionId) -> Iterable[PartOptionId]:

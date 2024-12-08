@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Optional
 
+from .money import Money
 from .name import Name
 from .part_option import PartOption, PartOptionId
 from .product_part import ProductPartId
+from .units import Units
 
 class PartOptionRepository(ABC):
     @abstractmethod
@@ -21,8 +23,8 @@ class PartOptionRepository(ABC):
             self,
             part_id: ProductPartId,
             name: Name,
-            price: float,
-            in_stock: bool) -> PartOption:
+            price: Money,
+            available_units: Units) -> PartOption:
         pass
 
     @abstractmethod

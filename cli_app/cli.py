@@ -20,7 +20,7 @@ def print_welcome_message(url: Optional[str]) -> None:
     Prints a welcome message, indicating if running in monolithic mode
     (with the backend bundled in the application) or against a server.
     """
-    print('Welcome to Markus Sports Equipment Store!')
+    print('Welcome to Marcus Sports Equipment Store!')
     if url:
         print(f'Running on {url}')
     else:

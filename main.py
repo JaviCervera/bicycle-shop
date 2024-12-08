@@ -1,5 +1,5 @@
 """
-Markus Sports Equipment Store - Main program
+Marcus Sports Equipment Store - Main program
 ============================================
 
 App usage:

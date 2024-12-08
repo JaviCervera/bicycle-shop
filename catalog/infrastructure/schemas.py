@@ -1,5 +1,5 @@
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
-    Product, ProductId, ProductPart, ProductPartId
+    Product, ProductId, ProductPart, ProductPartId, Units
 
 from marshmallow import Schema, fields, post_load
 
@@ -30,7 +30,7 @@ class PartOptionSchema(Schema):
     part_id = fields.Int()
     name = fields.Str()
     price = fields.Float()
-    in_stock = fields.Bool()
+    available_units = fields.Int()
 
     @post_load
     def load_part_option(self, data, **_) -> PartOption:
@@ -39,4 +39,4 @@ class PartOptionSchema(Schema):
             part_id=ProductPartId(data['part_id']),
             name=Name(data['name']),
             price=Money(data['price']),
-            in_stock=data['in_stock'])
+            available_units=Units(data['available_units']))

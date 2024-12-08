@@ -1,7 +1,7 @@
 from typing import Iterable, Optional
 
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
-    PartOptionRepository, ProductPartId
+    PartOptionRepository, ProductPartId, Units
 
 
 class MockPartOptionRepository(PartOptionRepository):
@@ -11,79 +11,79 @@ class MockPartOptionRepository(PartOptionRepository):
             ProductPartId(1),
             Name('Full-suspension'),
             Money(130),
-            True),
+            Units(10)),
         PartOption(
             PartOptionId(2),
             ProductPartId(1),
             Name('Diamond'),
             Money(100),
-            True),
+            Units(7)),
         PartOption(
             PartOptionId(3),
             ProductPartId(1),
             Name('Step-through'),
             Money(90),
-            True),
+            Units(3)),
         PartOption(
             PartOptionId(4),
             ProductPartId(2),
             Name('Matte'),
             Money(50),
-            True),
+            Units(5)),
         PartOption(
             PartOptionId(5),
             ProductPartId(2),
             Name('Shiny'),
             Money(30),
-            True),
+            Units(7)),
         PartOption(
             PartOptionId(6),
             ProductPartId(3),
             Name('Road wheels'),
             Money(80),
-            True),
+            Units(24)),
         PartOption(
             PartOptionId(7),
             ProductPartId(3),
             Name('Mountain wheels'),
             Money(90),
-            True),
+            Units(1)),
         PartOption(
             PartOptionId(8),
             ProductPartId(3),
             Name('Fat bike wheels'),
             Money(100),
-            True),
+            Units(15)),
         PartOption(
             PartOptionId(9),
             ProductPartId(4),
             Name('Red'),
             Money(20),
-            True),
+            Units(20)),
         PartOption(
             PartOptionId(10),
             ProductPartId(4),
             Name('Black'),
             Money(25),
-            True),
+            Units(32)),
         PartOption(
             PartOptionId(11),
             ProductPartId(4),
             Name('Blue'),
             Money(20),
-            True),
+            Units(11)),
         PartOption(
             PartOptionId(12),
             ProductPartId(5),
             Name('Single-speed chain'),
             Money(43),
-            True),
+            Units(6)),
         PartOption(
             PartOptionId(13),
             ProductPartId(5),
             Name('8-speed chain'),
             Money(90),
-            False),
+            Units(0)),
     ]
 
     def list(
@@ -104,8 +104,8 @@ class MockPartOptionRepository(PartOptionRepository):
             self,
             part_id: ProductPartId,
             name: Name,
-            price: float,
-            in_stock: bool) -> PartOption:
+            price: Money,
+            available_units: Units) -> PartOption:
         raise NotImplementedError()
 
     def list_incompatibilities(

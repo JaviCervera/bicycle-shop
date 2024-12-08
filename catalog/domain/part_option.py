@@ -4,6 +4,7 @@ from .name import Name
 from .model_id import ModelId
 from .money import Money
 from .product_part import ProductPartId
+from .units import Units
 
 class PartOptionId(ModelId):
     pass
@@ -15,4 +16,8 @@ class PartOption:
     part_id: ProductPartId
     name: Name
     price: Money
-    in_stock: bool
+    available_units: Units
+
+    @property
+    def in_stock(self) -> bool:
+        return int(self.available_units) > 0

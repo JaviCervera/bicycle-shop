@@ -6,6 +6,7 @@ from .product import Product, ProductId
 from .product_part import ProductPart, ProductPartId
 from .product_part_repository import ProductPartRepository
 from .product_repository import ProductRepository
+from .units import Units
 
 __all__ = [
     'Money',
@@ -19,4 +20,5 @@ __all__ = [
     'ProductPartId',
     'ProductPartRepository',
     'ProductRepository',
+    'Units',
 ]
