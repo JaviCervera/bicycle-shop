@@ -17,4 +17,4 @@ jobs:
       - name: 'Linting: ruff 🔍'
         run: python -m ruff check .
       - name: Test 🧪
-        run: pytest --cov
+        run: pytest --cov=catalog

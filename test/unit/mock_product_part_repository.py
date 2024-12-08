@@ -8,7 +8,7 @@ class MockProductPartRepository(ProductPartRepository):
     def list(
             self,
             product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:
-        if product_id in (None, 1):
+        if product_id is None or int(product_id) == 1:
             return [
                 ProductPartId(1),
                 ProductPartId(2),

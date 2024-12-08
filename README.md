@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ```
 
 However, if you want to run the tests and linters locally (they are set up as a
-CI  job on GitHub Actions that run automatically on every commit pushed), you
+CI job on GitHub Actions that run automatically on every commit pushed), you
 can instead run:
 
 ```shell
@@ -494,7 +494,5 @@ How can Marcus change the price of a specific part or specify particular pricing
 
 ## TODO:
 
-- Replace description with name?
+- Finish documentation.
 - Comment code.
-- Write unit tests (100% test coverage).
-- CloudFormation template?

@@ -12,14 +12,11 @@ class Money:
     def __add__(self, other: 'Money') -> 'Money':
         return Money(self.amount + other.amount)
 
-    def __sub__(self, other: 'Money') -> 'Money':
-        return Money(self.amount - other.amount)
-
     def __mul__(self, coefficient: float) -> 'Money':
         return Money(self.amount * coefficient)
 
     def __float__(self) -> float:
-        return self.amount
+        return float(self.amount)
 
     def __str__(self) -> str:
         return str(self.amount)
