@@ -8,4 +8,3 @@ def init_product_repository(repo: SqlAlchemyProductRepository) -> None:
     test data.
     """
     repo.create(Name('Bicycles'))
-    repo.commit()

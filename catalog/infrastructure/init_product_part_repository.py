@@ -16,4 +16,3 @@ def init_product_part_repository(repo: SqlAlchemyProductPartRepository) -> None:
     ]
     for part in parts:
         repo.create(*part)
-    repo.commit()

@@ -1,12 +1,11 @@
 from typing import Iterable, Optional
 
 from sqlalchemy import select
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, Session
 
 from catalog.domain import Name, ProductId, ProductPart, \
     ProductPartId, ProductPartRepository
 from .sqlalchemy_base import SqlAlchemyBase
-from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
 
 class ProductPartModel(SqlAlchemyBase):
@@ -16,8 +15,11 @@ class ProductPartModel(SqlAlchemyBase):
     name: Mapped[str]
 
 
-class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepository):
+class SqlAlchemyProductPartRepository(ProductPartRepository):
     """ A SQLAlchemy-based implementation of ProductPartRepository. """
+    def __init__(self, session: Session):
+        self._session = session
+
     def list(
             self,
             product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:

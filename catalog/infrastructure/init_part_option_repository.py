@@ -36,4 +36,3 @@ def init_part_option_repository(repo: SqlAlchemyPartOptionRepository) -> None:
         repo.create_incompatibility(*incomp)
     for modif in price_modifiers:
         repo.create_depending_option(*modif)
-    repo.commit()

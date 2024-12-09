@@ -68,4 +68,5 @@ def create_catalog(
         init_product_repository(app.product_repo)
         init_product_part_repository(app.part_repo)
         init_part_option_repository(app.option_repo)
+        app.session.commit()
         return app

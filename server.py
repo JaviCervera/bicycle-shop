@@ -69,6 +69,7 @@ class Server:
         init_product_repository(catalog.product_repo)
         init_product_part_repository(catalog.part_repo)
         init_part_option_repository(catalog.option_repo)
+        catalog.session.commit()
         return catalog
 
 if __name__ == '__main__':

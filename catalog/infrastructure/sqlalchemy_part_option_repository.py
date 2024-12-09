@@ -1,12 +1,11 @@
 from typing import Iterable, Optional
 
 from sqlalchemy import  select
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, Session
 
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
     PartOptionRepository, ProductPartId, Units
 from .sqlalchemy_base import SqlAlchemyBase
-from .sqlalchemy_base_repository import SqlAlchemyBaseRepository
 
 
 class PartOptionModel(SqlAlchemyBase):
@@ -31,8 +30,11 @@ class OptionPriceModifierModel(SqlAlchemyBase):
     coefficient: Mapped[float]
 
 
-class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseRepository):
+class SqlAlchemyPartOptionRepository(PartOptionRepository):
     """ A SQLAlchemy-based implementation of PartOptionRepository. """
+    def __init__(self, session: Session):
+        self._session = session
+
     def list(
             self,
             part_id: Optional[ProductPartId] = None) -> Iterable[PartOptionId]:

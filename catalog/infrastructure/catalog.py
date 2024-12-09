@@ -1,6 +1,7 @@
 from typing import Self
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from catalog.application import PartOptionsAction, PartOptionsPriceAction, \
     ProductPartsAction, ProductsAction
@@ -20,21 +21,18 @@ class Catalog:
     def __init__(self, db_url: str, echo=False):
         engine = create_engine(db_url, echo=echo)
         create_models(engine)
-        self.product_repo = SqlAlchemyProductRepository(engine)
-        self.part_repo = SqlAlchemyProductPartRepository(engine)
-        self.option_repo = SqlAlchemyPartOptionRepository(engine)
+        self.session = Session(engine)
+        self.product_repo = SqlAlchemyProductRepository(self.session)
+        self.part_repo = SqlAlchemyProductPartRepository(self.session)
+        self.option_repo = SqlAlchemyPartOptionRepository(self.session)
         self.products = ProductsAction(self.product_repo)
         self.product_parts = ProductPartsAction(self.part_repo)
         self.part_options = PartOptionsAction(self.option_repo)
         self.part_options_price = PartOptionsPriceAction(self.option_repo)
 
     def __enter__(self) -> Self:
-        self.product_repo.__enter__()
-        self.part_repo.__enter__()
-        self.option_repo.__enter__()
         return self
 
     def __exit__(self, *args) -> None:
-        self.product_repo.__exit__()
-        self.part_repo.__exit__()
-        self.option_repo.__exit__()
+        self.session.commit()
+        self.session.close()
