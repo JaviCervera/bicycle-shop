@@ -15,6 +15,7 @@ class ProductModel(SqlAlchemyBase):
 
 
 class SqlAlchemyProductRepository(ProductRepository, SqlAlchemyBaseRepository):
+    """ A SQLAlchemy-based implementation of ProductRepository. """
     def list(self) -> Iterable[ProductId]:
         return [ProductId(row.id)
                 for row in self._session.execute(select(ProductModel.id)).all()]

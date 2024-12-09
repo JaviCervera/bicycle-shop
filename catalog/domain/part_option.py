@@ -12,6 +12,7 @@ class PartOptionId(ModelId):
 
 @dataclass(frozen=True)
 class PartOption:
+    """ An option for a part. For example: Mountain wheels. """
     id: PartOptionId
     part_id: ProductPartId
     name: Name

@@ -2,6 +2,10 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Units:
+  """
+  The number of available units for a part option.
+  The value cannot be negative.
+  """
   units: int
 
   def __post_init__(self):

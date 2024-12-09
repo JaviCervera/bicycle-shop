@@ -3,6 +3,10 @@ from catalog.infrastructure import SqlAlchemyProductPartRepository
 
 
 def init_product_part_repository(repo: SqlAlchemyProductPartRepository) -> None:
+    """
+    Utility function that initialized a SqlAlchemyProductPartRepository with
+    test data.
+    """
     parts = [
         (ProductId(1), Name('Frame type')),
         (ProductId(1), Name('Frame finish')),

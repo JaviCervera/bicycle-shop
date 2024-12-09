@@ -7,6 +7,7 @@ from .product_part import ProductPart, ProductPartId
 
 
 class ProductPartRepository(ABC):
+    """ A repository to get and put product parts in persistence. """
     @abstractmethod
     def list(
             self,

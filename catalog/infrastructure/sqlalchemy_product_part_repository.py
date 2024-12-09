@@ -17,6 +17,7 @@ class ProductPartModel(SqlAlchemyBase):
 
 
 class SqlAlchemyProductPartRepository(ProductPartRepository, SqlAlchemyBaseRepository):
+    """ A SQLAlchemy-based implementation of ProductPartRepository. """
     def list(
             self,
             product_id: Optional[ProductId] = None) -> Iterable[ProductPartId]:

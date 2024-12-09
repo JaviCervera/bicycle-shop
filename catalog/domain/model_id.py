@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ModelId:
+    """ Base class for the id type of all entities. """
     id: int
 
     def __post_init__(self):

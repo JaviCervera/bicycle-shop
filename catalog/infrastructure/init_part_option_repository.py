@@ -3,6 +3,10 @@ from catalog.infrastructure import SqlAlchemyPartOptionRepository
 
 
 def init_part_option_repository(repo: SqlAlchemyPartOptionRepository) -> None:
+    """
+    Utility function that initialized a SqlAlchemyPartOptionRepository with
+    test data.
+    """
     options = [
         (ProductPartId(1), Name('Full-suspension'), Money(130), Units(10)),
         (ProductPartId(1), Name('Diamond'), Money(100), Units(7)),

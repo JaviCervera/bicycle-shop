@@ -32,6 +32,7 @@ class OptionPriceModifierModel(SqlAlchemyBase):
 
 
 class SqlAlchemyPartOptionRepository(PartOptionRepository, SqlAlchemyBaseRepository):
+    """ A SQLAlchemy-based implementation of PartOptionRepository. """
     def list(
             self,
             part_id: Optional[ProductPartId] = None) -> Iterable[PartOptionId]:

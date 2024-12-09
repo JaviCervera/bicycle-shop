@@ -1,3 +1,8 @@
+"""
+Provides Marshmallow schemas to help with the serialization of models across
+the network.
+"""
+
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
     Product, ProductId, ProductPart, ProductPartId, Units
 

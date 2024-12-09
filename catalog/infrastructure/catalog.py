@@ -11,8 +11,14 @@ from .sqlalchemy_product_repository import SqlAlchemyProductRepository
 
 
 class Catalog:
-    def __init__(self, url: str, echo=False):
-        engine = create_engine(url, echo=echo)
+    """
+    A class that encapsulates the application layer, providing access to the
+    use cases and an implementation of the repositories based on SQLAlchemy,
+    which support "with" context to ensure that repositories commit as they
+    exit the context.
+    """
+    def __init__(self, db_url: str, echo=False):
+        engine = create_engine(db_url, echo=echo)
         create_models(engine)
         self.product_repo = SqlAlchemyProductRepository(engine)
         self.part_repo = SqlAlchemyProductPartRepository(engine)

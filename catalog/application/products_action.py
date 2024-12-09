@@ -4,6 +4,7 @@ from catalog.domain import Product, ProductRepository
 from .log import log
 
 class ProductsAction:
+    """ Use case to retrieve the products. """
     def __init__(self, repo: ProductRepository):
         self._repo = repo
 

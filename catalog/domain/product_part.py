@@ -9,6 +9,10 @@ class ProductPartId(ModelId):
 
 @dataclass(frozen=True)
 class ProductPart:
+    """
+    Represents a type of part available for a product.
+    For example: Wheels.
+    """
     id: ProductPartId
     product_id: ProductId
     name: Name

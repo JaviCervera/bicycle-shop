@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Name:
+    """ A name which cannot be empty. """
     name: str
 
     def __post_init__(self):

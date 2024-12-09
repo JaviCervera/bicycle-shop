@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Money:
+    """ Money, which cannot be negative. """
     amount: float
 
     def __post_init__(self):

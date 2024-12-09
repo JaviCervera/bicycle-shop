@@ -8,6 +8,7 @@ from .product_part import ProductPartId
 from .units import Units
 
 class PartOptionRepository(ABC):
+    """ A repository to get and put part options in persistence. """
     @abstractmethod
     def list(
             self,

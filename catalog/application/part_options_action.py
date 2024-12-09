@@ -8,6 +8,11 @@ from .log import log
 
 
 class PartOptionsAction:
+    """
+    Use case that lets the user obtain the available options for a part, taking
+    into account that some selected options for other parts might make some of
+    the options for part_id unavailable.
+    """
     def __init__(self, repo: PartOptionRepository):
         self._repo = repo
 
