@@ -567,10 +567,40 @@ option that has already been defined for the other option selected.
 
 ### Setting prices
 
-How can Marcus change the price of a specific part or specify particular pricing for combinations of choices? How does the UI and database handle this?
+For changing the price of a defined option, it would follow the same process
+stated for **"Adding a new part choice"**. For indicating how to define options
+that modify the price of other options, the following solution was designed
+to satisfy the requirements:
+
+An option can alter the price of all options in a different part by applying a
+coefficient for it. For example, all options in the part "Frame finish" will
+see their price affected by a coefficient of 0.7 if the option "Diamond" (for
+the part "Frame type") is selected.
+
+In the previous example, the price of the different frame finishes depend on
+the area of the frame type where it will be applied. The price of the frame
+finishes could be provided on price per square meter, and then each type of
+frame could specify their area as the coefficient for the price of the
+finishes.
+
+For setting up these price modifiers, the following UI could be presented to
+the user:
+
+![Price modifiers page](doc/price_modifiers_page.png)
+
+After the user makes their selection by adding, removing, or updating price
+modifiers, the `/catalog/price_modifiers` endpoint could be used:
+
+* `POST` request to add new modifiers.
+* `PUT` request to update existing modifiers.
+* `DELETE` request to delete modifiers.
+
+The operations requires the `part_id` whose options' price will be modified,
+the `option_id` that must be selected in order to use the price modifier, and
+the `coefficient` of the modifier. The deletion of a modifier only requires the
+first two, as they are set as the primary keys in the database.
 
 ## TODO:
 
 - Document unused endpoints as well.
-- Finish documentation.
 - Comment code.
