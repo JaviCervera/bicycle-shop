@@ -252,6 +252,10 @@ Ref: option_price_modifiers.depending_option_id > part_options.id
 
 ## User Actions (OpenAPI specification)
 
+Not all endpoints specified here have been implemented in the provided code, as
+some of these endpoints refer to tasks which were not required in the
+specification but mentioned in some parts of this documentation.
+
 ```yaml
 openapi: 3.0.3
 info:
@@ -270,6 +274,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
+    post:
+      summary: Create a new product
+      requestBody:
+        description: Create a new product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductNew'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid input
+    put:
+      summary: Update a product
+      requestBody:
+        description: Update a product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid product id
+  /catalog/products/{product_id}:
+    delete:
+      summary: Delete a product
+      parameters:
+        - name: product_id
+          in: path
+          description: Id of the product
+          required: True
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid product id
   /catalog/product_parts:
     get:
       summary: Get all parts available for the given product
@@ -290,6 +340,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProductPart'
+    post:
+      summary: Create a new product part
+      requestBody:
+        description: Create a new product part
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPartNew'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductPart'
+        '400':
+          description: Invalid input
+    put:
+      summary: Update a product part
+      requestBody:
+        description: Update a product part
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductPart'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid product part id
+  /catalog/product_parts/{product_part_id}:
+    delete:
+      summary: Delete a product part
+      parameters:
+        - name: product_part_id
+          in: path
+          description: Id of the product part
+          required: True
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid product part id
   /catalog/part_options:
     get:
       summary: Get all options available for a part which are compatible with the already selected options
@@ -319,6 +415,52 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PartOption'
+    post:
+      summary: Create a new part option
+      requestBody:
+        description: Create a new part option
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartOptionNew'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartOption'
+        '400':
+          description: Invalid input
+    put:
+      summary: Update a part option
+      requestBody:
+        description: Update a part option
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartOption'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid part option id
+  /catalog/part_options/{part_option_id}:
+    delete:
+      summary: Delete a part option
+      parameters:
+        - name: part_option_id
+          in: path
+          description: Id of the part option
+          required: True
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid part option id
   /catalog/part_options_price:
     get:
       summary: Get the total price of all options selected
@@ -339,44 +481,149 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Price'
+  /catalog/part_option_incompatibilities:
+    post:
+      summary: Create a new incompatibility
+      requestBody:
+        description: Create a new incompatibility
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartOptionIncompatibility'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
+    delete:
+      summary: Delete an incompatibility
+      parameters:
+        - name: first_option_id
+          in: query
+          description: Id of the first option
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: second_option_id
+          in: query
+          description: Id of the second option
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
+  /catalog/price_modifiers:
+    post:
+      summary: Create a new price modifier
+      requestBody:
+        description: Create a new price modifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OptionPriceModifier'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
+    put:
+      summary: Update a price modifier (only coefficient can change)
+      requestBody:
+        description: Create a new price modifier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OptionPriceModifier'
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
+    delete:
+      summary: Delete a price modifier
+      parameters:
+        - name: part_id
+          in: query
+          description: Id of the product 
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: depending_option_id
+          in: query
+          description: Id of the depending option 
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid input
 components:
   schemas:
-    Product:
+    ProductNew:
       type: object
+      required:
+        - name
       properties:
-        id:
-          type: integer
-          format: int32
-          example: 1
-        description:
+        name:
           type: string
           example: Bicycles
-    ProductPart:
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/ProductNew'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+    ProductPartNew:
       type: object
+      required:
+        - product_id
+        - name
       properties:
-        id:
-          type: integer
-          format: int32
-          example: 1
         product_id:
           type: integer
           format: int32
           example: 1
-        description:
+        name:
           type: string
           example: Frame type
-    PartOption:
+    ProductPart:
+      allOf:
+        - $ref: '#/components/schemas/ProductPartNew'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+    PartOptionNew:
       type: object
+      required:
+        - part_id
+        - name
+        - price
+        - available_units
       properties:
-        id:
-          type: integer
-          format: int32
-          example: 1
         part_id:
           type: integer
           format: int32
           example: 1
-        description:
+        name:
           type: string
           example: Full-suspension
         price:
@@ -384,15 +631,62 @@ components:
           format: float
           example: 130.0
         available_units:
-          type: int
+          type: integer
+          format: int32
           example: 5
+    PartOption:
+      allOf:
+        - $ref: '#/components/schemas/PartOptionNew'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
     Price:
       type: object
+      required:
+        - price
       properties:
         price:
           type: number
           format: float
           example: 120.25
+    PartOptionIncompatibility:
+      type: object
+      required:
+        - first_option_id
+        - second_option_id
+      properties:
+        first_option_id:
+          type: integer
+          format: int32
+          example: 1
+        second_option_id:
+          type: integer
+          format: int32
+          example: 2
+    OptionPriceModifier:
+      type: object
+      required:
+        - part_id
+        - depending_option_id
+        - coefficient
+      properties:
+        part_id:
+          type: integer
+          format: int32
+          example: 1
+        depending_option_id:
+          type: integer
+          format: int32
+          example: 2
+        coefficient:
+          type: number
+          format: float
+          example: 0.7
 ```
 
 ## Product page
@@ -602,5 +896,4 @@ first two, as they are set as the primary keys in the database.
 
 ## TODO:
 
-- Document unused endpoints as well.
 - Comment code.
