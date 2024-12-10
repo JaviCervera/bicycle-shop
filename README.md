@@ -198,6 +198,8 @@ in the end for the increased coupling it would produce:
   * More coupling between domain classes.
   * The models should contain their repositories (bidirectional coupling).
 
+It also blurred the boundaries between the layers.
+
 On the monolithic mode, the CLI app directly calls into a `Catalog` instance
 which represents all the use cases for the proposed bicycle store task. On the
 split mode, the CLI app calls into a `CatalogProxy` instance which forwards the
