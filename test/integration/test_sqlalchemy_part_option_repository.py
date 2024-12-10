@@ -1,26 +1,30 @@
 from unittest import TestCase
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from catalog.domain import Money, Name, PartOption, PartOptionId, \
     ProductPartId, Units
 from catalog.infrastructure import create_models, \
     SqlAlchemyPartOptionRepository
-from catalog.infrastructure.init_part_option_repository import init_part_option_repository
+from catalog.infrastructure.init_part_option_repository \
+    import init_part_option_repository
 
 
 class TestSqlAlchemyPartOptionRepository(TestCase):
     def setUp(self):
         engine = create_engine('sqlite+pysqlite:///:memory:')
         create_models(engine)
-        self._repo = SqlAlchemyPartOptionRepository(engine)
-        init_part_option_repository(self._repo)
+        self.session = Session(engine)
+        self.repo = SqlAlchemyPartOptionRepository(self.session)
+        init_part_option_repository(self.repo)
+        self.session.commit()
 
     def tearDown(self):
-        self._repo.close()
+        self.session.close()
 
     def test_get_options(self):
-        option_ids = self._repo.list()
+        option_ids = self.repo.list()
         self.assertEqual(
             [
                 PartOptionId(1),
@@ -39,7 +43,7 @@ class TestSqlAlchemyPartOptionRepository(TestCase):
             ],
             option_ids)
 
-        options = [self._repo.get(id_) for id_ in option_ids]
+        options = [self.repo.get(id_) for id_ in option_ids]
         self.assertEqual(
             [
                 PartOption(
@@ -126,53 +130,53 @@ class TestSqlAlchemyPartOptionRepository(TestCase):
     def test_get_options_for_part(self):
         self.assertEqual(
             [PartOptionId(4), PartOptionId(5)],
-            self._repo.list(ProductPartId(2)))
+            self.repo.list(ProductPartId(2)))
 
     def test_get_options_for_invalid_part(self):
-        self.assertEqual([], self._repo.list(ProductPartId(6)))
+        self.assertEqual([], self.repo.list(ProductPartId(6)))
 
     def test_get_invalid_option(self):
-        self.assertIsNone(self._repo.get(PartOptionId(14)))
+        self.assertIsNone(self.repo.get(PartOptionId(14)))
 
     def test_list_incompatibilities(self):
         self.assertEqual(
             [PartOptionId(7)],
-            list(self._repo.list_incompatibilities(PartOptionId(2))))
+            list(self.repo.list_incompatibilities(PartOptionId(2))))
         self.assertEqual(
             [PartOptionId(7)],
-            list(self._repo.list_incompatibilities(PartOptionId(3))))
+            list(self.repo.list_incompatibilities(PartOptionId(3))))
         self.assertEqual(
             [PartOptionId(9)],
-            list(self._repo.list_incompatibilities(PartOptionId(8))))
+            list(self.repo.list_incompatibilities(PartOptionId(8))))
 
         # Check if it can return the incompatibilities in the reverse order
         self.assertEqual(
             [PartOptionId(2), PartOptionId(3)],
-            list(self._repo.list_incompatibilities(PartOptionId(7))))
+            list(self.repo.list_incompatibilities(PartOptionId(7))))
         self.assertEqual(
             [PartOptionId(8)],
-            list(self._repo.list_incompatibilities(PartOptionId(9))))
+            list(self.repo.list_incompatibilities(PartOptionId(9))))
 
     def test_get_incompatibilities_for_invalid_option(self):
         self.assertEqual(
             [],
-            list(self._repo.list_incompatibilities(PartOptionId(1))))
+            list(self.repo.list_incompatibilities(PartOptionId(1))))
 
     def test_get_price_modifiers(self):
-        depending_options = self._repo.list_depending_options(ProductPartId(2))
+        depending_options = self.repo.list_depending_options(ProductPartId(2))
         self.assertEqual([PartOptionId(2)], depending_options)
 
         price_coefs = [
-            self._repo.get_depending_option_price_coef(ProductPartId(2), id_)
+            self.repo.get_depending_option_price_coef(ProductPartId(2), id_)
             for id_ in depending_options]
         self.assertEqual([0.7], price_coefs)
 
     def test_get_price_modifiers_for_invalid_option(self):
         self.assertEqual(
             [],
-            self._repo.list_depending_options(ProductPartId(1)))
+            self.repo.list_depending_options(ProductPartId(1)))
         self.assertEqual(
             1,
-            self._repo.get_depending_option_price_coef(
+            self.repo.get_depending_option_price_coef(
                 ProductPartId(1),
                 PartOptionId(2)))

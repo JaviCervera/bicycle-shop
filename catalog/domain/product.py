@@ -8,5 +8,6 @@ class ProductId(ModelId):
 
 @dataclass(frozen=True)
 class Product:
+    """ A product. For example: Bicycles. """
     id: ProductId
     name: Name

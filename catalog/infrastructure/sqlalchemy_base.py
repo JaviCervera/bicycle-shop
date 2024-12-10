@@ -3,6 +3,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 
 class SqlAlchemyBase(DeclarativeBase):
+    """ Base class used internally to define all SQLAlchemy tables """
     pass
 
 

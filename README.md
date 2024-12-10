@@ -938,7 +938,3 @@ The operations requires the `part_id` whose options' price will be modified,
 the `option_id` that must be selected in order to use the price modifier, and
 the `coefficient` of the modifier. The deletion of a modifier only requires the
 first two, as they are set as the primary keys in the database.
-
-## TODO:
-
-- Comment code.
