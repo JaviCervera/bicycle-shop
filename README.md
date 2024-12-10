@@ -153,6 +153,51 @@ or `Domain`, but none of those can know about the `Infrastructure` layer.
   the serialization and deserialization of the data for use in the server's
   responses.
 
+For the domain classes, at some point it was considered to put more methods
+into them, with an interface like this:
+
+```python
+class Catalog:
+  def products(self) -> Iterable[Product]:
+    """ Returns all products in the catalog. """
+
+class Product:
+  id: ProductId
+  name: Name
+
+  def parts(self) -> Iterable[ProductPart]:
+    """ Returns all parts for this product. """
+  
+class ProductPart:
+    id: ProductPartId
+    product_id: ProductId
+    name: Name
+
+    def options(self, selected_options: Iterable[PartOption]) -> Iterable[PartOption]:
+      """ Returns all options for this part that are compatible with selected_options. """
+
+class PartOption:
+    id: PartOptionId
+    part_id: ProductPartId
+    name: Name
+    price: Money
+    available_units: Units
+
+    @staticmethod
+    def total_price(selected_options: Iterable[PartOption]) -> Money:
+      """
+      Returns the total price of selected_options, taking into account
+      that some options can alter the price of others.
+      """
+```
+
+While this design fits more naturally in a classical OOP approach, where each
+class acts as a "container" of the classes that are dependent on it (a product
+contains its parts, which in turn contains their options), I decided against it
+in the end for the increased coupling it would produce:
+  * More coupling between domain classes.
+  * The models should contain their repositories (bidirectional coupling).
+
 On the monolithic mode, the CLI app directly calls into a `Catalog` instance
 which represents all the use cases for the proposed bicycle store task. On the
 split mode, the CLI app calls into a `CatalogProxy` instance which forwards the
